@@ -26,11 +26,21 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Check for Signing Secrets
+        id: check_secrets
+        run: |
+          if [[ -n "${{ secrets.SIGNING_KEY }}" && -n "${{ secrets.ALIAS }}" && -n "${{ secrets.KEY_PASSWORD }}" ]]; then
+            echo "SIGNING_SECRET_READY=true" >> $GITHUB_ENV
+          else
+            echo "SIGNING_SECRET_READY=false" >> $GITHUB_ENV
+            echo "::warning::Signing secrets are not available. The APK will not be signed."
+          fi
+
       - name: Build with Gradle
         run: ./gradlew assembleRelease
 
       - name: Sign APK
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && env.SIGNING_SECRET_READY == 'true'
         uses: r0adkll/sign-android-release@v1
         id: sign_app
         with:
@@ -47,9 +57,7 @@ jobs:
         id: versioning
         run: |
           VERSION=$(grep "versionName" app/build.gradle | awk '{print $2}' | tr -d '"' | tr -d "'")
-          TAG="v$VERSION"
-          # Since version code is now the run number, we use that for unique tags
-          TAG="v1.0-b${{ github.run_number }}"
+          TAG="v$VERSION-b${{ github.run_number }}"
           echo "NEW_TAG=$TAG" >> $GITHUB_ENV
           echo "tag=$TAG" >> $GITHUB_OUTPUT
 
@@ -71,10 +79,16 @@ jobs:
           echo "$SECTION" >> $GITHUB_ENV
           echo "$EOF" >> $GITHUB_ENV
 
-      - name: Rename APK for Release
+      - name: Prepare APK for Release
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          mv ${{ steps.sign_app.outputs.signedReleaseFile }} app/build/outputs/apk/release/ShekharPAIBypass-${{ env.NEW_TAG }}.apk
+          if [ "${{ env.SIGNING_SECRET_READY }}" == "true" ]; then
+            APK_PATH="${{ steps.sign_app.outputs.signedReleaseFile }}"
+          else
+            APK_PATH="app/build/outputs/apk/release/app-release.apk"
+          fi
+          cp "$APK_PATH" "ShekharPAIBypass-${{ env.NEW_TAG }}.apk"
+          echo "FINAL_APK=ShekharPAIBypass-${{ env.NEW_TAG }}.apk" >> $GITHUB_ENV
 
       - name: Create Release
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -83,7 +97,7 @@ jobs:
           tag_name: ${{ env.NEW_TAG }}
           name: ShekharPAIBypass ${{ env.NEW_TAG }}
           body: ${{ env.notes }}
-          files: app/build/outputs/apk/release/ShekharPAIBypass-${{ env.NEW_TAG }}.apk
+          files: ${{ env.FINAL_APK }}
           generate_release_notes: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -92,4 +106,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: app/build/outputs/apk/release/*.apk
+          path: "*.apk"
