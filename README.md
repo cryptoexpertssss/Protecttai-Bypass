@@ -1,4 +1,4 @@
-# Protecttai-Bypass
+# ShekharPAIBypass
 A xposed module to bypass protectt.ai in Kotak Neo
 
 ---
@@ -25,6 +25,17 @@ The intention behind this project is not malicious; rather, it aims to inform de
 1. Download the bypass apk from releases or build it on your own.
 
 2. Run the Kotak Neo app with the hook applied, and see how the Protectt.ai solution is bypassed effortlessly.
+
+## Building the Project
+
+The project is configured for **fully automated releases**:
+
+- **Automatic Releases**: Every time you push code to the `main` branch, GitHub Actions will:
+  1. Extract the version (e.g., `1.0`) from `app/build.gradle`.
+  2. Create a unique Git tag (e.g., `v1.0-b25`).
+  3. Build the APK and rename it to `ShekharPAIBypass-v1.0-b25.apk`.
+  4. Create a new [GitHub Release](https://github.com/cryptoexpertssss/Protecttai-Bypass/releases) with the APK attached.
+- **Local Build**: You can still build locally using `.\gradlew.bat assembleRelease`.
 
 ## Contact
 Reach out via GitHub or Telegram if available.

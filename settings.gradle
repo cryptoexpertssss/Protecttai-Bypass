@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Protecttai-Bypass"
+rootProject.name = "ShekharPAIBypass"
 include ':app'
