@@ -12,9 +12,19 @@ android {
         applicationId "com.sch.pai.bypass"
         minSdk 24
         targetSdk 34
-        def runNumber = System.getenv("GITHUB_RUN_NUMBER")
-        versionCode (runNumber != null && runNumber.isInteger()) ? runNumber.toInteger() : 100
-        versionName "2.0-b" + (runNumber ?: "local")
+        
+        def runNumberStr = System.getenv("GITHUB_RUN_NUMBER")
+        def vCode = 100
+        def vNameSuffix = "local"
+        if (runNumberStr != null && !runNumberStr.isEmpty()) {
+            if (runNumberStr.isInteger()) {
+                vCode = runNumberStr.toInteger()
+            }
+            vNameSuffix = runNumberStr
+        }
+        
+        versionCode vCode
+        versionName "2.0-b" + vNameSuffix
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
