@@ -141,6 +141,57 @@ public class MainHook implements IXposedHookLoadPackage {
                 }
             });
 
+            // 7. Universal SSL Certificate Unpinning
+            try {
+                // Trust all certificates
+                XC_MethodReplacement trustAll = new XC_MethodReplacement() {
+                    @Override
+                    protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
+                        return null;
+                    }
+                };
+
+                // Hook X509TrustManager checkServerTrusted & checkClientTrusted
+                Class<?>[] paramTypes = new Class[]{java.security.cert.X509Certificate[].class, String.class};
+                XposedHelpers.findAndHookMethod("javax.net.ssl.X509TrustManager", lpparam.classLoader, "checkServerTrusted", paramTypes, trustAll);
+                XposedHelpers.findAndHookMethod("javax.net.ssl.X509TrustManager", lpparam.classLoader, "checkClientTrusted", paramTypes, trustAll);
+
+                // Hook HostnameVerifier to always return true
+                XposedHelpers.findAndHookMethod("javax.net.ssl.HttpsURLConnection", lpparam.classLoader, "setDefaultHostnameVerifier", "javax.net.ssl.HostnameVerifier", new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        param.args[0] = new javax.net.ssl.HostnameVerifier() {
+                            @Override
+                            public boolean verify(String hostname, javax.net.ssl.SSLSession session) {
+                                return true;
+                            }
+                        };
+                    }
+                });
+
+                // Override SSLContext getSocketFactory
+                XposedHelpers.findAndHookMethod("javax.net.ssl.SSLContext", lpparam.classLoader, "init",
+                        javax.net.ssl.KeyManager[].class, javax.net.ssl.TrustManager[].class, java.security.SecureRandom.class, new XC_MethodHook() {
+                            @Override
+                            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                                param.args[1] = new javax.net.ssl.TrustManager[]{
+                                        new javax.net.ssl.X509TrustManager() {
+                                            @Override
+                                            public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {}
+                                            @Override
+                                            public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {}
+                                            @Override
+                                            public java.security.cert.X509Certificate[] getAcceptedIssuers() { return new java.security.cert.X509Certificate[0]; }
+                                        }
+                                };
+                            }
+                        });
+
+                XposedBridge.log("ShekharPAIBypass: [DEFENCE] SSL Unpinning deployed");
+            } catch (Throwable t) {
+                XposedBridge.log("ShekharPAIBypass: [DEFENCE] SSL Unpinning failed: " + t.getMessage());
+            }
+
             // 7. Prevent ActivityTaskManager from starting Root/Xposed manager apps to see if they exist
             XC_MethodHook startActivityHook = new XC_MethodHook() {
                 @Override
