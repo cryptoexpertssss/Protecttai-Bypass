@@ -2,10 +2,12 @@ package com.sch.pai.bypass;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.util.Enumeration;
 
+import dalvik.system.DexFile;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
@@ -13,81 +15,114 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class MainHook implements IXposedHookLoadPackage {
+    
+    // The "Digital Fingerprint" of Protectt.ai RASP SDK initialization
+    private static final Class<?>[][] RASP_SIGNATURES = {
+        // Standard: (String, int, int, int, String, int)
+        {String.class, int.class, int.class, int.class, String.class, int.class},
+        // Variant: (Context, String, int, int, int, String, int)
+        {Context.class, String.class, int.class, int.class, int.class, String.class, int.class}
+    };
+
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
+        XposedBridge.log("ShekharPAIBypass: Loaded for " + lpparam.packageName);
+
         try {
-            // We hook Application.onCreate to get the right ClassLoader.
-            // Using a simple afterHook ensures we don't interfere with app startup.
             XposedHelpers.findAndHookMethod(Application.class, "onCreate", new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     try {
                         Context context = (Context) param.thisObject;
-                        ClassLoader classLoader = context.getClassLoader();
-                        XposedBridge.log("ShekharPAIBypass: Application.onCreate detected for " + context.getPackageName());
-                        applyUniversalHook(classLoader);
+                        XposedBridge.log("ShekharPAIBypass: Starting Universal Heuristic Scan for " + context.getPackageName());
+                        
+                        // We run this in a thread to avoid blocking the UI thread too long, 
+                        // though we want it to finish quickly.
+                        new Thread(() -> {
+                            try {
+                                runUniversalScanner(context);
+                            } catch (Throwable t) {
+                                XposedBridge.log("ShekharPAIBypass: Scanner thread error: " + t.getMessage());
+                            }
+                        }).start();
+                        
                     } catch (Throwable t) {
-                        XposedBridge.log("ShekharPAIBypass: Critical error in onCreate hook: " + t.getMessage());
+                        XposedBridge.log("ShekharPAIBypass: Error in onCreate hook: " + t.getMessage());
                     }
                 }
             });
         } catch (Throwable t) {
-            // Some apps might use custom contexts or be extremely stripped
             XposedBridge.log("ShekharPAIBypass: Failed to hook Application.onCreate: " + t.getMessage());
         }
     }
 
-    private void applyUniversalHook(ClassLoader classLoader) {
-        // Known Protectt.ai RASP SDK init signatures and obfuscated names
-        String[][] targets = {
-                {"f.g", "u1"}, // Kotak Neo / NSDL
-                {"com.protectt.sdk.AppProtecttInteractor", "init"}, // Standard SDK
-                {"p0.m", "m1"}, // NSDL Jiffy pattern
-                {"q.r", "s"},   // Generic pattern 1
-                {"a.b", "c"},    // Generic pattern 2
-                {"a.b", "d"},    // Generic pattern 3
-                {"c.d", "e"},    // Generic pattern 4
-                {"com.protectt.sdk.v2.RA", "check"}, // New SDK pattern
-                {"com.protectt.sdk.RA", "init"}      // Standard RA pattern
-        };
+    private void runUniversalScanner(Context context) {
+        try {
+            ApplicationInfo ai = context.getApplicationInfo();
+            String dexPath = ai.sourceDir;
+            DexFile dexFile = new DexFile(dexPath);
+            Enumeration<String> entries = dexFile.entries();
+            ClassLoader classLoader = context.getClassLoader();
 
-        for (String[] target : targets) {
-            try {
-                // Check if the class exists in the current app
-                Class<?> clazz = XposedHelpers.findClassIfExists(target[0], classLoader);
-                if (clazz == null) continue;
-
-                XposedBridge.log("ShekharPAIBypass: Target class found: " + target[0]);
-
-                // Debug: List all methods for discovery
-                for (Method m : clazz.getDeclaredMethods()) {
-                    XposedBridge.log("ShekharPAIBypass: Discovery - " + target[0] + "." + m.getName() + " " + m.toString());
-                }
+            int matchesFound = 0;
+            while (entries.hasMoreElements()) {
+                String className = entries.nextElement();
+                
+                // Heuristic: RASP SDKs often have short obfuscated names or contain "protectt"
+                // We skip android/androidx/google libs to save time, but check others.
+                if (className.startsWith("android.") || className.startsWith("androidx.") || 
+                    className.startsWith("com.google.") || className.startsWith("java.") || 
+                    className.startsWith("kotlin.")) continue;
 
                 try {
-                    // Try the standard signature first
-                    XposedHelpers.findAndHookMethod(clazz, target[1],
-                            String.class, int.class, int.class, int.class, String.class, int.class,
-                            getCallback());
-                } catch (Throwable t) {
-                    XposedBridge.log("ShekharPAIBypass: Signature mismatch for " + target[0] + "." + target[1] + ": " + t.getMessage());
-                    
-                    // Fallback: Scan all methods in the class for the name and hook them if they match the basic structure
+                    Class<?> clazz = XposedHelpers.findClassIfExists(className, classLoader);
+                    if (clazz == null) continue;
+
                     for (Method m : clazz.getDeclaredMethods()) {
-                        if (m.getName().equals(target[1])) {
-                            try {
-                                XposedBridge.hookMethod(m, getCallback());
-                                XposedBridge.log("ShekharPAIBypass: Successfully hooked via discovery: " + m.toString());
-                            } catch (Throwable t2) {
-                                XposedBridge.log("ShekharPAIBypass: Failed to hook discovered method " + m.getName() + ": " + t2.getMessage());
-                            }
+                        if (isRaspSignature(m)) {
+                            XposedBridge.hookMethod(m, getCallback());
+                            XposedBridge.log("ShekharPAIBypass: [UNIVERSAL MATCH] Hooked " + m.toString());
+                            matchesFound++;
                         }
                     }
+                } catch (Throwable ignored) {}
+            }
+            XposedBridge.log("ShekharPAIBypass: Heuristic scan complete. Found " + matchesFound + " targets.");
+        } catch (Throwable t) {
+            XposedBridge.log("ShekharPAIBypass: Universal Scanner failed: " + t.getMessage());
+        }
+    }
+
+    private boolean isRaspSignature(Method m) {
+        Class<?>[] params = m.getParameterTypes();
+        
+        // Check against our known high-entropy RASP signatures
+        for (Class<?>[] sig : RASP_SIGNATURES) {
+            if (params.length == sig.length) {
+                boolean match = true;
+                for (int i = 0; i < params.length; i++) {
+                    if (!params[i].equals(sig[i])) {
+                        match = false;
+                        break;
+                    }
                 }
-            } catch (Throwable t) {
-                XposedBridge.log("ShekharPAIBypass: Error processing target " + target[0] + ": " + t.getMessage());
+                if (match) return true;
             }
         }
+
+        // Generic Heuristic: If method takes 5+ params and mostly ints/Strings
+        if (params.length >= 5 && params.length <= 10) {
+            int intCount = 0;
+            int stringCount = 0;
+            for (Class<?> p : params) {
+                if (p.equals(int.class)) intCount++;
+                else if (p.equals(String.class)) stringCount++;
+            }
+            // Protectt.ai init usually has 4+ ints and 1-2 strings
+            return intCount >= 4 && stringCount >= 1;
+        }
+
+        return false;
     }
 
     private XC_MethodHook getCallback() {
@@ -98,17 +133,15 @@ public class MainHook implements IXposedHookLoadPackage {
                     Method method = (Method) param.method;
                     Class<?> returnType = method.getReturnType();
 
-                    // LOGGING FIX: Check for static methods to avoid NPE
                     String className = (param.thisObject != null) ?
                             param.thisObject.getClass().getName() :
                             method.getDeclaringClass().getName() + " [Static]";
 
-                    XposedBridge.log("ShekharPAIBypass: Triggered " + method.getName() + " in " +
-                            className + " (RT: " + returnType.getSimpleName() + ")");
+                    XposedBridge.log("ShekharPAIBypass: Triggered Universal Bypass on " + method.getName() + 
+                            " in " + className + " (RT: " + returnType.getSimpleName() + ")");
 
                     if (returnType.equals(Void.TYPE)) return;
 
-                    // Handle all primitives with safe defaults
                     if (returnType.isPrimitive()) {
                         if (returnType.equals(boolean.class)) {
                             param.setResult(true);
