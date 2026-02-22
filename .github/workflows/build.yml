@@ -29,15 +29,30 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew assembleRelease
 
+      - name: Sign APK
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: r0adkll/sign-android-release@v1
+        id: sign_app
+        with:
+          releaseDirectory: app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+        env:
+          BUILD_TOOLS_VERSION: "34.0.0"
+
       - name: Extract Version and Create Tag
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         id: versioning
         run: |
           VERSION=$(grep "versionName" app/build.gradle | awk '{print $2}' | tr -d '"' | tr -d "'")
-          TAG="v$VERSION-b${{ github.run_number }}"
+          TAG="v$VERSION"
+          # Since version code is now the run number, we use that for unique tags
+          TAG="v1.0-b${{ github.run_number }}"
           echo "NEW_TAG=$TAG" >> $GITHUB_ENV
           echo "tag=$TAG" >> $GITHUB_OUTPUT
-          
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag $TAG
@@ -49,7 +64,7 @@ jobs:
         run: |
           # Extract everything between the first ## and the second ## (or end of file)
           SECTION=$(awk '/^## \[/{if (count++) exit} {if (count) print}' CHANGELOG.md)
-          
+
           # Handle multi-line strings in GitHub Actions outputs
           EOF=$(dd if=/dev/urandom bs=15 count=1 2>/dev/null | base64)
           echo "notes<<$EOF" >> $GITHUB_ENV
@@ -59,7 +74,7 @@ jobs:
       - name: Rename APK for Release
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/ShekharPAIBypass-${{ env.NEW_TAG }}.apk
+          mv ${{ steps.sign_app.outputs.signedReleaseFile }} app/build/outputs/apk/release/ShekharPAIBypass-${{ env.NEW_TAG }}.apk
 
       - name: Create Release
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -68,7 +83,7 @@ jobs:
           tag_name: ${{ env.NEW_TAG }}
           name: ShekharPAIBypass ${{ env.NEW_TAG }}
           body: ${{ env.notes }}
-          files: app/build/outputs/apk/release/*.apk
+          files: app/build/outputs/apk/release/ShekharPAIBypass-${{ env.NEW_TAG }}.apk
           generate_release_notes: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

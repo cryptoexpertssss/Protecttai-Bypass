@@ -10,8 +10,8 @@ android {
         applicationId "com.sch.pai.bypass"
         minSdk 24
         targetSdk 34
-        versionCode 1
-        versionName "1.0"
+        versionCode System.getenv("GITHUB_RUN_NUMBER") ? System.getenv("GITHUB_RUN_NUMBER").toInteger() : 1
+        versionName "1.0-b" + (System.getenv("GITHUB_RUN_NUMBER") ?: "local")
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
