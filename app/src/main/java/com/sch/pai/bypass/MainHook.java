@@ -1,7 +1,9 @@
 package com.sch.pai.bypass;
 
+import android.app.Application;
 import android.content.Context;
-import android.util.Log;
+
+import java.lang.reflect.Method;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
@@ -12,78 +14,78 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 public class MainHook implements IXposedHookLoadPackage {
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        // Exclude common system and library packages to save time
-        if (lpparam.packageName.startsWith("android.") || 
-            lpparam.packageName.startsWith("com.google.") ||
-            lpparam.packageName.equals("com.sch.pai.bypass")) {
-            return;
-        }
+        // LSPosed handles the scope. We only process apps selected by the user.
+        // We avoid logging here to prevent cluttering the Xposed log.
 
-        XposedBridge.log("Protectt.ai Bypass: Scanning " + lpparam.packageName);
-
-        // We search for the specific method signature used by Protectt.ai RASP SDK:
-        // (String, int, int, int, String, int)
-        // In Kotak Neo it was f.g.u1, but it varies by app due to obfuscation.
-        
         try {
-            // Use DexKit-like approach or simple reflection if classes are already loaded
-            // Since we are in handleLoadPackage, we can use lpparam.classLoader
-            
-            // To be truly universal, we can hook the constructor or a common entry point
-            // However, a structural search for the signature is most reliable
-            
-            // For now, let's look for the known Kotak and NSDL patterns if we have them,
-            // but the "generic" way is to scan.
-            
-            // NOTE: Scanning all classes can be slow. A better way is to hook common SDK entry points.
-            // Protectt usually initializes in Application.onCreate
-            
-            XposedHelpers.findAndHookMethod(android.app.Application.class, "onCreate", new XC_MethodHook() {
+            // Hook Application.onCreate to get the ClassLoader in a stable way
+            XposedHelpers.findAndHookMethod(Application.class, "onCreate", new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                    Context context = (Context) param.thisObject;
-                    ClassLoader classLoader = context.getClassLoader();
-                    
-                    // Here we could iterate, but for the first version of "Universal",
-                    // let's try the common obfuscated names and the signature search.
-                    
-                    // Signature: (String, int, int, int, String, int)
-                    // We'll hook the method dynamically if found.
-                    applyUniversalHook(classLoader);
+                    try {
+                        Context context = (Context) param.thisObject;
+                        ClassLoader classLoader = context.getClassLoader();
+                        applyUniversalHook(classLoader);
+                    } catch (Throwable t) {
+                        // Silently catch to prevent host app crash
+                    }
                 }
             });
-            
-        } catch (Exception e) {
-            XposedBridge.log("Protectt.ai Bypass Error: " + e.getMessage());
+        } catch (Throwable t) {
+            // Application.onCreate hook failed (shouldn't happen, but safety first)
         }
     }
 
     private void applyUniversalHook(ClassLoader classLoader) {
-        // This is a placeholder for a more advanced scanner.
-        // For now, we use the known signature which is very unique to the SDK.
-        // In a real "Universal" module, we'd use DexKit to find the method bytecode pattern.
-        
-        // Let's try to hook the known ones first for reliability
+        // Patterns for Protectt.ai RASP SDK
+        // (String, int, int, int, String, int)
         String[][] targets = {
-            {"f.g", "u1"}, // Kotak Neo
-            {"com.protectt.sdk.AppProtecttInteractor", "init"} // Potential non-obfuscated
+                {"f.g", "u1"}, // Kotak Neo (obfuscated)
+                {"com.protectt.sdk.AppProtecttInteractor", "init"} // Standard SDK entry
         };
 
         for (String[] target : targets) {
             try {
-                XposedHelpers.findAndHookMethod(target[0], classLoader, target[1], 
-                    String.class, int.class, int.class, int.class, String.class, int.class, 
-                    new XC_MethodHook() {
-                        @Override
-                        protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                            XposedBridge.log("Protectt.ai Bypass: Successfully hooked " + param.method.getName());
-                            param.setResult(null);
-                        }
-                    });
-            } catch (XposedHelpers.ClassNotFoundError | NoSuchMethodError ignored) {
-                // Not the target class/method
+                // Check if class exists before attempting to hook to avoid internal Xposed noise
+                Class<?> clazz = XposedHelpers.findClassIfExists(target[0], classLoader);
+                if (clazz == null) continue;
+
+                XposedHelpers.findAndHookMethod(clazz, target[1],
+                        String.class, int.class, int.class, int.class, String.class, int.class,
+                        new XC_MethodHook() {
+                            @Override
+                            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                                try {
+                                    XposedBridge.log("ShekharPAIBypass: Hooked " + param.method.getName() + " in " + param.thisObject.getClass().getName());
+                                    
+                                    // SAFELY handle return values to prevent NPE/Crashes
+                                    // If the method returns an Object (like the known null-return bypasses)
+                                    // We check the return type of the method.
+                                    Method method = (Method) param.method;
+                                    Class<?> returnType = method.getReturnType();
+
+                                    if (returnType.equals(Void.TYPE)) {
+                                        // Method returns void, just continue after potentially logging
+                                        return;
+                                    } else if (returnType.isPrimitive()) {
+                                        // For primitives, return a safe "success" value
+                                        if (returnType.equals(boolean.class)) {
+                                            param.setResult(true); // Usually true for 'initialized' or 'safe'
+                                        } else if (returnType.equals(int.class)) {
+                                            param.setResult(0); // 0 is common for success codes
+                                        }
+                                    } else {
+                                        // For Objects, return null as per the known Protectt.ai bypass pattern
+                                        param.setResult(null);
+                                    }
+                                } catch (Throwable t) {
+                                    XposedBridge.log("ShekharPAIBypass: Callback error: " + t.getMessage());
+                                }
+                            }
+                        });
+            } catch (Throwable ignored) {
+                // Not the target class/method or hook failed
             }
         }
     }
-
 }
