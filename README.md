@@ -27,7 +27,4 @@ The intention behind this project is not malicious; rather, it aims to inform de
 2. Run the Kotak Neo app with the hook applied, and see how the Protectt.ai solution is bypassed effortlessly.
 
 ## Contact
-Feel free to reach out via:
-- Telegram Group: [Join Group](https://t.me/reveny1)
-- Telegram Contact: [Contact](https://t.me/revenyy)
-- Website: [Website](https://reveny.me/contact.html)
+Reach out via GitHub or Telegram if available.

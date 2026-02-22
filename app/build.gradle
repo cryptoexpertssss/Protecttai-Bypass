@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.reveny.protecttai.bypass'
+    namespace 'com.sch.pai.bypass'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.reveny.protecttai.bypass"
+        applicationId "com.sch.pai.bypass"
         minSdk 24
         targetSdk 34
         versionCode 1
