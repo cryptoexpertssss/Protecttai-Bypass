@@ -109,6 +109,8 @@ public class MainHook implements IXposedHookLoadPackage {
                         if (key.equals("vxp") || key.equals("ro.secure")) {
                             if (key.equals("ro.secure")) param.setResult("1");
                             else param.setResult(null);
+                        } else if (key.equals("ro.debuggable")) {
+                            param.setResult("0");
                         } else if (key.equals("http.proxyHost") || key.equals("http.proxyPort") || 
                                    key.equals("https.proxyHost") || key.equals("https.proxyPort")) {
                             XposedBridge.log("ShekharPAIBypass: [DEFENCE] Hid proxy system property: " + key);
@@ -347,6 +349,83 @@ public class MainHook implements IXposedHookLoadPackage {
                 }
             } catch (Throwable t) {
                 XposedBridge.log("ShekharPAIBypass: [DEFENCE] OkHttp bypass failed: " + t.getMessage());
+            }
+
+            // 11. Comprehensive Stealth & Package Hiding
+            try {
+                final java.util.Set<String> blacklist = new java.util.HashSet<>(java.util.Arrays.asList(
+                    "com.sch.pai.bypass", "io.github.lsposed.manager", "org.meowcat.lsposed",
+                    "com.topjohnwu.magisk", "com.google.android.apps.authenticator2", // sometimes used for root hide
+                    "com.frida.server", "re.frida.server", "iamnotadeveloper", "com.dia", "dia"
+                ));
+
+                XC_MethodHook hidePackageHook = new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        Object result = param.getResult();
+                        if (result instanceof java.util.List) {
+                            java.util.List list = (java.util.List) result;
+                            java.util.Iterator it = list.iterator();
+                            while (it.hasNext()) {
+                                Object item = it.next();
+                                String pkgName = null;
+                                if (item instanceof android.content.pm.PackageInfo) pkgName = ((android.content.pm.PackageInfo)item).packageName;
+                                else if (item instanceof android.content.pm.ApplicationInfo) pkgName = ((android.content.pm.ApplicationInfo)item).packageName;
+                                else if (item instanceof android.content.pm.ResolveInfo) {
+                                    if (((android.content.pm.ResolveInfo)item).activityInfo != null) pkgName = ((android.content.pm.ResolveInfo)item).activityInfo.packageName;
+                                }
+                                
+                                if (pkgName != null) {
+                                    for (String black : blacklist) {
+                                        if (pkgName.toLowerCase().contains(black)) {
+                                            XposedBridge.log("ShekharPAIBypass: [STEALTH] Hiding blacklisted package: " + pkgName);
+                                            it.remove();
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+
+                XposedHelpers.findAndHookMethod("android.app.ApplicationPackageManager", lpparam.classLoader, "getInstalledPackages", int.class, hidePackageHook);
+                XposedHelpers.findAndHookMethod("android.app.ApplicationPackageManager", lpparam.classLoader, "getInstalledApplications", int.class, hidePackageHook);
+                XposedHelpers.findAndHookMethod("android.app.ApplicationPackageManager", lpparam.classLoader, "queryIntentActivities", android.content.Intent.class, int.class, hidePackageHook);
+
+                // Hide actual files
+                XposedHelpers.findAndHookMethod(java.io.File.class, "exists", new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        java.io.File file = (java.io.File) param.thisObject;
+                        String path = file.getAbsolutePath();
+                        if (path != null) {
+                            String lower = path.toLowerCase();
+                            if (lower.contains("su") || lower.contains("magisk") || lower.contains("frida") || lower.contains("busybox")) {
+                                param.setResult(false);
+                            }
+                        }
+                    }
+                });
+
+                // Scrub /proc/self/maps to hide memory traces
+                XposedHelpers.findAndHookMethod("java.io.BufferedReader", lpparam.classLoader, "readLine", new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        String line = (String) param.getResult();
+                        if (line != null) {
+                            String lower = line.toLowerCase();
+                            if (lower.contains("xposed") || lower.contains("frida") || lower.contains("lsposed") || lower.contains("magisk")) {
+                                // XposedBridge.log("ShekharPAIBypass: [STEALTH] Scrubbed line from maps: " + line);
+                                param.setResult(null); // Return null for such lines
+                            }
+                        }
+                    }
+                });
+
+                XposedBridge.log("ShekharPAIBypass: [STEALTH] Advanced stealth features deployed");
+            } catch (Throwable t) {
+                XposedBridge.log("ShekharPAIBypass: [STEALTH] Stealth features failed: " + t.getMessage());
             }
 
             XposedBridge.log("ShekharPAIBypass: Defensive hooks deployed for " + lpparam.packageName);
