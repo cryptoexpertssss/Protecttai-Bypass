@@ -3,7 +3,6 @@ name: Build Android App
 on:
   push:
     branches: ["main"]
-    tags: ["v*"]
   pull_request:
     branches: ["main"]
 
@@ -14,6 +13,8 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: set up JDK 17
         uses: actions/setup-java@v4
@@ -28,16 +29,31 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew assembleRelease
 
-      - name: Rename APK for Release
-        if: startsWith(github.ref, 'refs/tags/v')
+      - name: Extract Version and Create Tag
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        id: versioning
         run: |
-          TAG_NAME=${GITHUB_REF#refs/tags/}
-          mv app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/ShekharPAIBypass-$TAG_NAME.apk
+          VERSION=$(grep "versionName" app/build.gradle | awk '{print $2}' | tr -d '"' | tr -d "'")
+          TAG="v$VERSION-b${{ github.run_number }}"
+          echo "NEW_TAG=$TAG" >> $GITHUB_ENV
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag $TAG
+          git push origin $TAG
+
+      - name: Rename APK for Release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          mv app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/ShekharPAIBypass-${{ env.NEW_TAG }}.apk
 
       - name: Create Release
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ env.NEW_TAG }}
+          name: ShekharPAIBypass ${{ env.NEW_TAG }}
           files: app/build/outputs/apk/release/*.apk
           generate_release_notes: true
         env:
