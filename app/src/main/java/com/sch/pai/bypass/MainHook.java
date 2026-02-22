@@ -55,48 +55,69 @@ public class MainHook implements IXposedHookLoadPackage {
 
                 XposedBridge.log("ShekharPAIBypass: Target class found: " + target[0]);
 
-                XposedHelpers.findAndHookMethod(clazz, target[1],
-                        String.class, int.class, int.class, int.class, String.class, int.class,
-                        new XC_MethodHook() {
-                            @Override
-                            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                                try {
-                                    Method method = (Method) param.method;
-                                    Class<?> returnType = method.getReturnType();
-                                    
-                                    // LOGGING FIX: Check for static methods to avoid NPE
-                                    String className = (param.thisObject != null) ? 
-                                            param.thisObject.getClass().getName() : 
-                                            method.getDeclaringClass().getName() + " [Static]";
-                                            
-                                    XposedBridge.log("ShekharPAIBypass: Hooked " + method.getName() + " in " + 
-                                            className + " (RT: " + returnType.getSimpleName() + ")");
-
-                                    if (returnType.equals(Void.TYPE)) return;
-
-                                    // Handle all primitives with safe defaults
-                                    if (returnType.isPrimitive()) {
-                                        if (returnType.equals(boolean.class)) {
-                                            param.setResult(true);
-                                        } else if (returnType.equals(int.class) || returnType.equals(byte.class) || 
-                                                   returnType.equals(short.class) || returnType.equals(long.class)) {
-                                            param.setResult(0);
-                                        } else if (returnType.equals(float.class) || returnType.equals(double.class)) {
-                                            param.setResult(0.0);
-                                        } else if (returnType.equals(char.class)) {
-                                            param.setResult('\0');
-                                        }
-                                    } else {
-                                        param.setResult(null);
-                                    }
-                                } catch (Throwable t) {
-                                    XposedBridge.log("ShekharPAIBypass: Callback error: " + t.getMessage());
-                                }
+                try {
+                    // Try the standard signature first
+                    XposedHelpers.findAndHookMethod(clazz, target[1],
+                            String.class, int.class, int.class, int.class, String.class, int.class,
+                            getCallback());
+                } catch (Throwable t) {
+                    XposedBridge.log("ShekharPAIBypass: Signature mismatch for " + target[0] + "." + target[1] + ": " + t.getMessage());
+                    
+                    // Fallback: Scan all methods in the class for the name and hook them if they match the basic structure
+                    for (Method m : clazz.getDeclaredMethods()) {
+                        if (m.getName().equals(target[1])) {
+                            try {
+                                XposedBridge.hookMethod(m, getCallback());
+                                XposedBridge.log("ShekharPAIBypass: Successfully hooked via discovery: " + m.toString());
+                            } catch (Throwable t2) {
+                                XposedBridge.log("ShekharPAIBypass: Failed to hook discovered method " + m.getName() + ": " + t2.getMessage());
                             }
-                        });
+                        }
+                    }
+                }
             } catch (Throwable t) {
-                // Method signature didn't match or other hooking issue
+                XposedBridge.log("ShekharPAIBypass: Error processing target " + target[0] + ": " + t.getMessage());
             }
         }
+    }
+
+    private XC_MethodHook getCallback() {
+        return new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                try {
+                    Method method = (Method) param.method;
+                    Class<?> returnType = method.getReturnType();
+
+                    // LOGGING FIX: Check for static methods to avoid NPE
+                    String className = (param.thisObject != null) ?
+                            param.thisObject.getClass().getName() :
+                            method.getDeclaringClass().getName() + " [Static]";
+
+                    XposedBridge.log("ShekharPAIBypass: Triggered " + method.getName() + " in " +
+                            className + " (RT: " + returnType.getSimpleName() + ")");
+
+                    if (returnType.equals(Void.TYPE)) return;
+
+                    // Handle all primitives with safe defaults
+                    if (returnType.isPrimitive()) {
+                        if (returnType.equals(boolean.class)) {
+                            param.setResult(true);
+                        } else if (returnType.equals(int.class) || returnType.equals(byte.class) ||
+                                returnType.equals(short.class) || returnType.equals(long.class)) {
+                            param.setResult(0);
+                        } else if (returnType.equals(float.class) || returnType.equals(double.class)) {
+                            param.setResult(0.0);
+                        } else if (returnType.equals(char.class)) {
+                            param.setResult('\0');
+                        }
+                    } else {
+                        param.setResult(null);
+                    }
+                } catch (Throwable t) {
+                    XposedBridge.log("ShekharPAIBypass: Callback error: " + t.getMessage());
+                }
+            }
+        };
     }
 }
