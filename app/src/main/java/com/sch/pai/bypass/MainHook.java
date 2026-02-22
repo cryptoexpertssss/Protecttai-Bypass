@@ -81,7 +81,7 @@ public class MainHook implements IXposedHookLoadPackage {
                     for (Method m : clazz.getDeclaredMethods()) {
                         if (isRaspSignature(m)) {
                             XposedBridge.hookMethod(m, getCallback());
-                            XposedBridge.log("ShekharPAIBypass: [UNIVERSAL MATCH] Hooked " + m.toString());
+                            XposedBridge.log("ShekharPAIBypass: [UNIVERSAL MATCH] Hooked " + m.getDeclaringClass().getName() + "." + m.getName());
                             matchesFound++;
                         }
                     }
