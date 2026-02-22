@@ -46,7 +46,7 @@ jobs:
       - name: Rename APK for Release
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          mv app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/ShekharPAIBypass-${{ env.NEW_TAG }}.apk
+          mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/ShekharPAIBypass-${{ env.NEW_TAG }}.apk
 
       - name: Create Release
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
