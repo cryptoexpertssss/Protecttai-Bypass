@@ -111,6 +111,36 @@ public class MainHook implements IXposedHookLoadPackage {
                 }
             });
 
+            // 4. Prevent App from wiping its own data (Protectt.ai RASP defense)
+            XposedHelpers.findAndHookMethod("android.app.ActivityManager", lpparam.classLoader, "clearApplicationUserData", new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    XposedBridge.log("ShekharPAIBypass: [DEFENCE] Blocked clearApplicationUserData!");
+                    param.setResult(true); // Pretend it succeeded
+                }
+            });
+
+            // 5. Prevent System.exit()
+            XposedHelpers.findAndHookMethod("java.lang.System", lpparam.classLoader, "exit", int.class, new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    XposedBridge.log("ShekharPAIBypass: [DEFENCE] Blocked System.exit(" + param.args[0] + ")");
+                    param.setResult(null); // Block exit
+                }
+            });
+
+            // 6. Prevent Process.killProcess()
+            XposedHelpers.findAndHookMethod("android.os.Process", lpparam.classLoader, "killProcess", int.class, new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    int pid = (int) param.args[0];
+                    if (pid == android.os.Process.myPid()) {
+                        XposedBridge.log("ShekharPAIBypass: [DEFENCE] Blocked Process.killProcess(" + pid + ")");
+                        param.setResult(null); // Block killProcess for our own PID
+                    }
+                }
+            });
+
             XposedBridge.log("ShekharPAIBypass: Defensive hooks deployed for " + lpparam.packageName);
         } catch (Throwable t) {
             XposedBridge.log("ShekharPAIBypass: Failed to deploy defensive hooks: " + t.getMessage());
