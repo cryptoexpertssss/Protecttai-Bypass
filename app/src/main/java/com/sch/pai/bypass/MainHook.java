@@ -183,9 +183,19 @@ public class MainHook implements IXposedHookLoadPackage {
     }
 
     private boolean isRaspSignature(Method m) {
+        String methodName = m.getName().toLowerCase();
+        String className = m.getDeclaringClass().getName().toLowerCase();
+        
+        // 1. Hook anything in Protectt.ai packages blindly
+        if (className.contains("protectt") || className.contains("nsdl") || className.contains("AppProtecttInteractor")) {
+            if (methodName.contains("init") || methodName.contains("start") || methodName.contains("check") || methodName.contains("detect") || methodName.contains("root") || methodName.contains("hook") || methodName.contains("xposed")) {
+                return true;
+            }
+        }
+
         Class<?>[] params = m.getParameterTypes();
         
-        // Check against our known high-entropy RASP signatures
+        // 2. Check against our known high-entropy RASP signatures
         for (Class<?>[] sig : RASP_SIGNATURES) {
             if (params.length == sig.length) {
                 boolean match = true;
@@ -199,16 +209,19 @@ public class MainHook implements IXposedHookLoadPackage {
             }
         }
 
-        // Generic Heuristic: If method takes 5+ params and mostly ints/Strings
-        if (params.length >= 5 && params.length <= 10) {
+        // 3. Generic Heuristic: If method takes 3+ params and mostly ints/Strings
+        if (params.length >= 3 && params.length <= 15) {
             int intCount = 0;
             int stringCount = 0;
+            int contextCount = 0;
             for (Class<?> p : params) {
                 if (p.equals(int.class)) intCount++;
                 else if (p.equals(String.class)) stringCount++;
+                else if (p.equals(Context.class) || p.equals(Application.class)) contextCount++;
             }
-            // Protectt.ai init usually has 4+ ints and 1-2 strings
-            return intCount >= 4 && stringCount >= 1;
+            // Protectt.ai init usually has ints and strings, often a context
+            if (intCount >= 2 && stringCount >= 1) return true;
+            if (contextCount >= 1 && stringCount >= 2) return true;
         }
 
         return false;
