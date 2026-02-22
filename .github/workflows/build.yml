@@ -26,37 +26,14 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Check for Signing Secrets
-        id: check_secrets
-        run: |
-          if [[ -n "${{ secrets.SIGNING_KEY }}" && -n "${{ secrets.ALIAS }}" && -n "${{ secrets.KEY_PASSWORD }}" ]]; then
-            echo "SIGNING_SECRET_READY=true" >> $GITHUB_ENV
-          else
-            echo "SIGNING_SECRET_READY=false" >> $GITHUB_ENV
-            echo "::warning::Signing secrets are not available. The APK will not be signed."
-          fi
-
       - name: Build with Gradle
         run: ./gradlew assembleRelease
-
-      - name: Sign APK
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && env.SIGNING_SECRET_READY == 'true'
-        uses: r0adkll/sign-android-release@v1
-        id: sign_app
-        with:
-          releaseDirectory: app/build/outputs/apk/release
-          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-          alias: ${{ secrets.ALIAS }}
-          keyStorePassword: ${{ secrets.KEY_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
-        env:
-          BUILD_TOOLS_VERSION: "34.0.0"
 
       - name: Extract Version and Create Tag
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         id: versioning
         run: |
-          VERSION=$(grep "versionName" app/build.gradle | awk '{print $2}' | tr -d '"' | tr -d "'")
+          VERSION=$(grep "versionName" app/build.gradle | head -n 1 | awk -F'"' '{print $2}')
           TAG="v$VERSION-b${{ github.run_number }}"
           echo "NEW_TAG=$TAG" >> $GITHUB_ENV
           echo "tag=$TAG" >> $GITHUB_OUTPUT
@@ -70,10 +47,7 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         id: changelog
         run: |
-          # Extract everything between the first ## and the second ## (or end of file)
           SECTION=$(awk '/^## \[/{if (count++) exit} {if (count) print}' CHANGELOG.md)
-
-          # Handle multi-line strings in GitHub Actions outputs
           EOF=$(dd if=/dev/urandom bs=15 count=1 2>/dev/null | base64)
           echo "notes<<$EOF" >> $GITHUB_ENV
           echo "$SECTION" >> $GITHUB_ENV
@@ -82,11 +56,7 @@ jobs:
       - name: Prepare APK for Release
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          if [ "${{ env.SIGNING_SECRET_READY }}" == "true" ]; then
-            APK_PATH="${{ steps.sign_app.outputs.signedReleaseFile }}"
-          else
-            APK_PATH="app/build/outputs/apk/release/app-release.apk"
-          fi
+          APK_PATH="app/build/outputs/apk/release/app-release.apk"
           cp "$APK_PATH" "ShekharPAIBypass-${{ env.NEW_TAG }}.apk"
           echo "FINAL_APK=ShekharPAIBypass-${{ env.NEW_TAG }}.apk" >> $GITHUB_ENV
 
