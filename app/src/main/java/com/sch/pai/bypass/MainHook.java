@@ -14,39 +14,31 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 public class MainHook implements IXposedHookLoadPackage {
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        // LSPosed handles the scope. We only process apps selected by the user.
-        // We avoid logging here to prevent cluttering the Xposed log.
-
+        // LSPosed scope check
         try {
-            // Hook Application.onCreate to get the ClassLoader in a stable way
             XposedHelpers.findAndHookMethod(Application.class, "onCreate", new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     try {
                         Context context = (Context) param.thisObject;
-                        ClassLoader classLoader = context.getClassLoader();
-                        applyUniversalHook(classLoader);
-                    } catch (Throwable t) {
-                        // Silently catch to prevent host app crash
-                    }
+                        applyUniversalHook(context.getClassLoader());
+                    } catch (Throwable ignored) {}
                 }
             });
-        } catch (Throwable t) {
-            // Application.onCreate hook failed (shouldn't happen, but safety first)
-        }
+        } catch (Throwable ignored) {}
     }
 
     private void applyUniversalHook(ClassLoader classLoader) {
-        // Patterns for Protectt.ai RASP SDK
-        // (String, int, int, int, String, int)
+        // Expanded targets for Protectt.ai RASP SDK
         String[][] targets = {
-                {"f.g", "u1"}, // Kotak Neo (obfuscated)
-                {"com.protectt.sdk.AppProtecttInteractor", "init"} // Standard SDK entry
+                {"f.g", "u1"}, // Kotak Neo
+                {"com.protectt.sdk.AppProtecttInteractor", "init"}, // Standard
+                {"p0.m", "m1"}, // NSDL Jiffy (Common obfuscation pattern)
+                {"a.b", "c"}    // Generic obfuscation
         };
 
         for (String[] target : targets) {
             try {
-                // Check if class exists before attempting to hook to avoid internal Xposed noise
                 Class<?> clazz = XposedHelpers.findClassIfExists(target[0], classLoader);
                 if (clazz == null) continue;
 
@@ -56,36 +48,36 @@ public class MainHook implements IXposedHookLoadPackage {
                             @Override
                             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                                 try {
-                                    XposedBridge.log("ShekharPAIBypass: Hooked " + param.method.getName() + " in " + param.thisObject.getClass().getName());
-                                    
-                                    // SAFELY handle return values to prevent NPE/Crashes
-                                    // If the method returns an Object (like the known null-return bypasses)
-                                    // We check the return type of the method.
                                     Method method = (Method) param.method;
                                     Class<?> returnType = method.getReturnType();
+                                    XposedBridge.log("ShekharPAIBypass: Hooked " + method.getName() + " in " + target[0] + " (Return: " + returnType.getSimpleName() + ")");
 
                                     if (returnType.equals(Void.TYPE)) {
-                                        // Method returns void, just continue after potentially logging
                                         return;
-                                    } else if (returnType.isPrimitive()) {
-                                        // For primitives, return a safe "success" value
+                                    }
+
+                                    // COMPREHENSIVE PRIMITIVE HANDLING
+                                    if (returnType.isPrimitive()) {
                                         if (returnType.equals(boolean.class)) {
-                                            param.setResult(true); // Usually true for 'initialized' or 'safe'
-                                        } else if (returnType.equals(int.class)) {
-                                            param.setResult(0); // 0 is common for success codes
+                                            param.setResult(true);
+                                        } else if (returnType.equals(int.class) || returnType.equals(byte.class) || 
+                                                   returnType.equals(short.class) || returnType.equals(long.class)) {
+                                            param.setResult(0);
+                                        } else if (returnType.equals(float.class) || returnType.equals(double.class)) {
+                                            param.setResult(0.0);
+                                        } else if (returnType.equals(char.class)) {
+                                            param.setResult('\0');
                                         }
                                     } else {
-                                        // For Objects, return null as per the known Protectt.ai bypass pattern
+                                        // For Objects, return null
                                         param.setResult(null);
                                     }
                                 } catch (Throwable t) {
-                                    XposedBridge.log("ShekharPAIBypass: Callback error: " + t.getMessage());
+                                    XposedBridge.log("ShekharPAIBypass ERROR: " + t.getMessage());
                                 }
                             }
                         });
-            } catch (Throwable ignored) {
-                // Not the target class/method or hook failed
-            }
+            } catch (Throwable ignored) {}
         }
     }
 }
