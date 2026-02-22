@@ -40,11 +40,15 @@ public class MainHook implements IXposedHookLoadPackage {
     private void applyUniversalHook(ClassLoader classLoader) {
         // Known Protectt.ai RASP SDK init signatures and obfuscated names
         String[][] targets = {
-                {"f.g", "u1"}, // Kotak Neo
+                {"f.g", "u1"}, // Kotak Neo / NSDL
                 {"com.protectt.sdk.AppProtecttInteractor", "init"}, // Standard SDK
                 {"p0.m", "m1"}, // NSDL Jiffy pattern
                 {"q.r", "s"},   // Generic pattern 1
-                {"a.b", "c"}    // Generic pattern 2
+                {"a.b", "c"},    // Generic pattern 2
+                {"a.b", "d"},    // Generic pattern 3
+                {"c.d", "e"},    // Generic pattern 4
+                {"com.protectt.sdk.v2.RA", "check"}, // New SDK pattern
+                {"com.protectt.sdk.RA", "init"}      // Standard RA pattern
         };
 
         for (String[] target : targets) {
