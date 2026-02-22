@@ -217,6 +217,60 @@ public class MainHook implements IXposedHookLoadPackage {
                 // Ignore hooking errors for specific variants if they don't exist
             }
 
+            // 8. Bypass User Certificate Detections
+            try {
+                // Hide files in cacerts-added and typical cert paths
+                XposedHelpers.findAndHookMethod(java.io.File.class, "exists", new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        java.io.File file = (java.io.File) param.thisObject;
+                        String path = file.getAbsolutePath();
+                        if (path != null && (path.contains("cacerts-added") || path.contains("user/0/cacerts"))) {
+                            XposedBridge.log("ShekharPAIBypass: [DEFENCE] Blocked generic cert file check: " + path);
+                            param.setResult(false);
+                        }
+                    }
+                });
+
+                // Filter user-installed certificates from KeyStore aliases
+                XposedHelpers.findAndHookMethod(java.security.KeyStore.class, "aliases", new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        Enumeration<String> aliases = (Enumeration<String>) param.getResult();
+                        if (aliases != null) {
+                            java.util.Vector<String> safeAliases = new java.util.Vector<>();
+                            while (aliases.hasMoreElements()) {
+                                String alias = aliases.nextElement();
+                                // AndroidCAStore uses "user:" prefix for user-installed certificates
+                                if (alias != null && !alias.startsWith("user:")) {
+                                    safeAliases.add(alias);
+                                } else {
+                                    XposedBridge.log("ShekharPAIBypass: [DEFENCE] Hid user certificate alias: " + alias);
+                                }
+                            }
+                            param.setResult(safeAliases.elements());
+                        }
+                    }
+                });
+                
+                // Pretend the AndroidCAStore has fewer certificates (optional, but some RASP checks size)
+                XposedHelpers.findAndHookMethod(java.security.KeyStore.class, "size", new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        java.security.KeyStore ks = (java.security.KeyStore) param.thisObject;
+                        if ("AndroidCAStore".equals(ks.getType())) {
+                            int size = (int) param.getResult();
+                            // subtract an arbitrary amount if we want, but returning the true system size is hard without enumerating
+                            // usually filtering aliases is enough. We can just catch if they ask.
+                        }
+                    }
+                });
+
+                XposedBridge.log("ShekharPAIBypass: [DEFENCE] User Certificate bypass deployed");
+            } catch (Throwable t) {
+                XposedBridge.log("ShekharPAIBypass: [DEFENCE] User Cert bypass failed: " + t.getMessage());
+            }
+
             XposedBridge.log("ShekharPAIBypass: Defensive hooks deployed for " + lpparam.packageName);
         } catch (Throwable t) {
             XposedBridge.log("ShekharPAIBypass: Failed to deploy defensive hooks: " + t.getMessage());
