@@ -100,14 +100,20 @@ public class MainHook implements IXposedHookLoadPackage {
                 }
             });
 
-            // 3. Hide Virtual Xposed properties
+            // 3. Hide Virtual Xposed properties and Proxy properties
             XposedHelpers.findAndHookMethod(System.class, "getProperty", String.class, new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     String key = (String) param.args[0];
-                    if (key != null && (key.equals("vxp") || key.equals("ro.secure"))) {
-                        if (key.equals("ro.secure")) param.setResult("1");
-                        else param.setResult(null);
+                    if (key != null) {
+                        if (key.equals("vxp") || key.equals("ro.secure")) {
+                            if (key.equals("ro.secure")) param.setResult("1");
+                            else param.setResult(null);
+                        } else if (key.equals("http.proxyHost") || key.equals("http.proxyPort") || 
+                                   key.equals("https.proxyHost") || key.equals("https.proxyPort")) {
+                            XposedBridge.log("ShekharPAIBypass: [DEFENCE] Hid proxy system property: " + key);
+                            param.setResult(null);
+                        }
                     }
                 }
             });
@@ -269,6 +275,78 @@ public class MainHook implements IXposedHookLoadPackage {
                 XposedBridge.log("ShekharPAIBypass: [DEFENCE] User Certificate bypass deployed");
             } catch (Throwable t) {
                 XposedBridge.log("ShekharPAIBypass: [DEFENCE] User Cert bypass failed: " + t.getMessage());
+            }
+
+            // 9. Bypass Proxy Server Detection
+            try {
+                // Hook ProxySelector to return NoProxy
+                Class<?> proxySelectorClass = XposedHelpers.findClass("java.net.ProxySelector", lpparam.classLoader);
+                XposedHelpers.findAndHookMethod(proxySelectorClass, "getDefault", new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        XposedBridge.log("ShekharPAIBypass: [DEFENCE] Enforced NoProxy in ProxySelector.getDefault()");
+                        param.setResult(java.net.ProxySelector.getDefault()); // Return system default or NoProxy?
+                        // Actually, returning a custom one that always returns NO_PROXY is better
+                        param.setResult(new java.net.ProxySelector() {
+                            @Override
+                            public java.util.List<java.net.Proxy> select(java.net.URI uri) {
+                                return java.util.Collections.singletonList(java.net.Proxy.NO_PROXY);
+                            }
+                            @Override
+                            public void connectFailed(java.net.URI uri, java.net.SocketAddress sa, java.io.IOException ioe) {}
+                        });
+                    }
+                });
+
+                // Hide proxy from ConnectivityManager
+                XposedHelpers.findAndHookMethod("android.net.ConnectivityManager", lpparam.classLoader, "getProxyForNetwork", "android.net.Network", new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        param.setResult(null);
+                    }
+                });
+                XposedHelpers.findAndHookMethod("android.net.ConnectivityManager", lpparam.classLoader, "getDefaultProxy", new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        param.setResult(null);
+                    }
+                });
+
+                // Hide proxy from Settings provider
+                XC_MethodHook hideSettingHook = new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        String name = (String) param.args[1];
+                        if ("http_proxy".equals(name) || "global_http_proxy_host".equals(name) || "global_http_proxy_port".equals(name)) {
+                            XposedBridge.log("ShekharPAIBypass: [DEFENCE] Hid proxy setting: " + name);
+                            param.setResult(null);
+                        }
+                    }
+                };
+                XposedHelpers.findAndHookMethod("android.provider.Settings.Global", lpparam.classLoader, "getString", android.content.ContentResolver.class, String.class, hideSettingHook);
+                XposedHelpers.findAndHookMethod("android.provider.Settings.Secure", lpparam.classLoader, "getString", android.content.ContentResolver.class, String.class, hideSettingHook);
+                XposedHelpers.findAndHookMethod("android.provider.Settings.System", lpparam.classLoader, "getString", android.content.ContentResolver.class, String.class, hideSettingHook);
+
+                XposedBridge.log("ShekharPAIBypass: [DEFENCE] Proxy bypass deployed");
+            } catch (Throwable t) {
+                XposedBridge.log("ShekharPAIBypass: [DEFENCE] Proxy bypass failed: " + t.getMessage());
+            }
+
+            // 10. OkHttp CertificatePinner Bypass
+            try {
+                XC_MethodReplacement trustAll = XC_MethodReplacement.returnConstant(null);
+                
+                // Attempt to hook common OkHttp versions
+                String[] okhttpClasses = {"okhttp3.CertificatePinner", "com.squareup.okhttp.CertificatePinner"};
+                for (String cls : okhttpClasses) {
+                    try {
+                        XposedHelpers.findAndHookMethod(cls, lpparam.classLoader, "check", String.class, java.util.List.class, trustAll);
+                        XposedHelpers.findAndHookMethod(cls, lpparam.classLoader, "check", String.class, java.security.cert.Certificate[].class, trustAll);
+                        XposedBridge.log("ShekharPAIBypass: [DEFENCE] Hooked check() in " + cls);
+                    } catch (Throwable ignore) {}
+                }
+            } catch (Throwable t) {
+                XposedBridge.log("ShekharPAIBypass: [DEFENCE] OkHttp bypass failed: " + t.getMessage());
             }
 
             XposedBridge.log("ShekharPAIBypass: Defensive hooks deployed for " + lpparam.packageName);
