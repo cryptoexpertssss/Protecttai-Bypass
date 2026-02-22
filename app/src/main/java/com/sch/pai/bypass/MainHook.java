@@ -26,6 +26,9 @@ public class MainHook implements IXposedHookLoadPackage {
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
+        // Run defensive hooks immediately to hide LSPosed
+        runDefensiveHooks(lpparam);
+
         XposedBridge.log("ShekharPAIBypass: Loaded for " + lpparam.packageName);
 
         try {
@@ -56,6 +59,64 @@ public class MainHook implements IXposedHookLoadPackage {
         }
     }
 
+    private void runDefensiveHooks(XC_LoadPackage.LoadPackageParam lpparam) {
+        try {
+            // 1. Spoof PackageManager to hide LSPosed Manager
+            XposedHelpers.findAndHookMethod("android.app.ApplicationPackageManager", lpparam.classLoader, "getPackageInfo", String.class, int.class, new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    String packageName = (String) param.args[0];
+                    if (packageName != null && (packageName.contains("lsposed") || packageName.equals("io.github.lsposed.manager"))) {
+                        XposedBridge.log("ShekharPAIBypass: [DEFENCE] Intercepted getPackageInfo for " + packageName);
+                        param.setThrowable(new android.content.pm.PackageManager.NameNotFoundException(packageName));
+                    }
+                }
+            });
+
+            // 2. Sanitize Stack Traces to hide Xposed classes
+            XposedHelpers.findAndHookMethod(Throwable.class, "getStackTrace", new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    StackTraceElement[] stackTrace = (StackTraceElement[]) param.getResult();
+                    if (stackTrace != null) {
+                        java.util.List<StackTraceElement> cleanTrace = new java.util.ArrayList<>();
+                        boolean modified = false;
+                        for (StackTraceElement element : stackTrace) {
+                            String className = element.getClassName();
+                            if (className.contains("de.robv.android.xposed") || 
+                                className.contains("LSPHooker") || 
+                                className.contains("me.weishu.epic") ||
+                                className.contains("com.sch.pai.bypass")) {
+                                modified = true;
+                                continue;
+                            }
+                            cleanTrace.add(element);
+                        }
+                        if (modified) {
+                            param.setResult(cleanTrace.toArray(new StackTraceElement[0]));
+                        }
+                    }
+                }
+            });
+
+            // 3. Hide Virtual Xposed properties
+            XposedHelpers.findAndHookMethod(System.class, "getProperty", String.class, new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    String key = (String) param.args[0];
+                    if (key != null && (key.equals("vxp") || key.equals("ro.secure"))) {
+                        if (key.equals("ro.secure")) param.setResult("1");
+                        else param.setResult(null);
+                    }
+                }
+            });
+
+            XposedBridge.log("ShekharPAIBypass: Defensive hooks deployed for " + lpparam.packageName);
+        } catch (Throwable t) {
+            XposedBridge.log("ShekharPAIBypass: Failed to deploy defensive hooks: " + t.getMessage());
+        }
+    }
+
     private void runUniversalScanner(Context context) {
         try {
             ApplicationInfo ai = context.getApplicationInfo();
@@ -74,18 +135,16 @@ public class MainHook implements IXposedHookLoadPackage {
                     className.startsWith("com.google.") || className.startsWith("java.") || 
                     className.startsWith("kotlin.")) continue;
 
-                try {
-                    Class<?> clazz = XposedHelpers.findClassIfExists(className, classLoader);
-                    if (clazz == null) continue;
+                Class<?> clazz = XposedHelpers.findClassIfExists(className, classLoader);
+                if (clazz == null) continue;
 
-                    for (Method m : clazz.getDeclaredMethods()) {
-                        if (isRaspSignature(m)) {
-                            XposedBridge.hookMethod(m, getCallback());
-                            XposedBridge.log("ShekharPAIBypass: [UNIVERSAL MATCH] Hooked " + m.getDeclaringClass().getName() + "." + m.getName());
-                            matchesFound++;
-                        }
+                for (Method m : clazz.getDeclaredMethods()) {
+                    if (isRaspSignature(m)) {
+                        XposedBridge.hookMethod(m, getCallback());
+                        XposedBridge.log("ShekharPAIBypass: [UNIVERSAL MATCH] Hooked " + m.getDeclaringClass().getName() + "." + m.getName());
+                        matchesFound++;
                     }
-                } catch (Throwable ignored) {}
+                }
             }
             XposedBridge.log("ShekharPAIBypass: Heuristic scan complete. Found " + matchesFound + " targets.");
         } catch (Throwable t) {
