@@ -32,7 +32,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/v')
         run: |
           TAG_NAME=${GITHUB_REF#refs/tags/}
-          mv app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/ProtecttBypass-$TAG_NAME.apk
+          mv app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/ShekharPAIBypass-$TAG_NAME.apk
 
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/v')
