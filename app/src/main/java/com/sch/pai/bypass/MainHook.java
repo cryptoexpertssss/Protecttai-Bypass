@@ -141,6 +141,30 @@ public class MainHook implements IXposedHookLoadPackage {
                 }
             });
 
+            // 7. Prevent ActivityTaskManager from starting Root/Xposed manager apps to see if they exist
+            XC_MethodHook startActivityHook = new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    android.content.Intent intent = (android.content.Intent) param.args[0];
+                    if (intent != null && intent.getComponent() != null) {
+                        String pkg = intent.getComponent().getPackageName();
+                        if (pkg.contains("magisk") || pkg.contains("lsposed") || pkg.contains("kernelsu") || pkg.contains("ksunext") || pkg.contains("hidemyapplist")) {
+                            XposedBridge.log("ShekharPAIBypass: [DEFENCE] Blocked startActivity for " + pkg);
+                            param.setResult(null); // Pretend it worked or block it gracefully
+                        }
+                    }
+                }
+            };
+            
+            try {
+                XposedHelpers.findAndHookMethod(Context.class, "startActivity", android.content.Intent.class, startActivityHook);
+                XposedHelpers.findAndHookMethod(Context.class, "startActivity", android.content.Intent.class, android.os.Bundle.class, startActivityHook);
+                XposedHelpers.findAndHookMethod(android.app.Activity.class, "startActivity", android.content.Intent.class, startActivityHook);
+                XposedHelpers.findAndHookMethod(android.app.Activity.class, "startActivity", android.content.Intent.class, android.os.Bundle.class, startActivityHook);
+            } catch (Throwable t) {
+                // Ignore hooking errors for specific variants if they don't exist
+            }
+
             XposedBridge.log("ShekharPAIBypass: Defensive hooks deployed for " + lpparam.packageName);
         } catch (Throwable t) {
             XposedBridge.log("ShekharPAIBypass: Failed to deploy defensive hooks: " + t.getMessage());
