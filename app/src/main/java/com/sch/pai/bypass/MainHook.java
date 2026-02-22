@@ -150,7 +150,51 @@ public class MainHook implements IXposedHookLoadPackage {
                 }
             });
 
-            // 7. Universal SSL Certificate Unpinning
+            // 7. ADB Detection Bypass
+            try {
+                XC_MethodHook adbHook = new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        String name = (String) param.args[1];
+                        if ("adb_enabled".equals(name) || "usb_debugging_enabled".equals(name) || "development_settings_enabled".equals(name)) {
+                            XposedBridge.log("ShekharPAIBypass: [ADB] Spoofing setting " + name + " to 0");
+                            param.setResult(0);
+                        }
+                    }
+                };
+                
+                String[] settingsClasses = {"android.provider.Settings.Global", "android.provider.Settings.Secure"};
+                for (String cls : settingsClasses) {
+                    try {
+                        XposedHelpers.findAndHookMethod(cls, lpparam.classLoader, "getInt", android.content.ContentResolver.class, String.class, adbHook);
+                        XposedHelpers.findAndHookMethod(cls, lpparam.classLoader, "getInt", android.content.ContentResolver.class, String.class, int.class, adbHook);
+                    } catch (Throwable ignore) {}
+                }
+
+                // Hook SystemProperties for adb configs
+                Class<?> sysPropClass = XposedHelpers.findClass("android.os.SystemProperties", lpparam.classLoader);
+                XposedHelpers.findAndHookMethod(sysPropClass, "get", String.class, new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        String key = (String) param.args[0];
+                        if (key != null && (key.equals("persist.sys.usb.config") || key.equals("sys.usb.config") || key.equals("ro.debuggable"))) {
+                            String val = (String) param.getResult();
+                            if (val != null && val.contains("adb")) {
+                                XposedBridge.log("ShekharPAIBypass: [ADB] Scrubbing 'adb' from " + key);
+                                param.setResult(val.replace("adb", "").replace(",,", ","));
+                            } else if (key.equals("ro.debuggable")) {
+                                param.setResult("0");
+                            }
+                        }
+                    }
+                });
+
+                XposedBridge.log("ShekharPAIBypass: [ADB] ADB bypass hooks deployed");
+            } catch (Throwable t) {
+                XposedBridge.log("ShekharPAIBypass: [ADB] ADB bypass failed: " + t.getMessage());
+            }
+
+            // 8. Universal SSL Certificate Unpinning
             try {
                 // Trust all certificates
                 XC_MethodReplacement trustAll = new XC_MethodReplacement() {
