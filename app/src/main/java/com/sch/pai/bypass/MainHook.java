@@ -55,6 +55,11 @@ public class MainHook implements IXposedHookLoadPackage {
 
                 XposedBridge.log("ShekharPAIBypass: Target class found: " + target[0]);
 
+                // Debug: List all methods for discovery
+                for (Method m : clazz.getDeclaredMethods()) {
+                    XposedBridge.log("ShekharPAIBypass: Discovery - " + target[0] + "." + m.getName() + " " + m.toString());
+                }
+
                 try {
                     // Try the standard signature first
                     XposedHelpers.findAndHookMethod(clazz, target[1],
