@@ -43,6 +43,19 @@ jobs:
           git tag $TAG
           git push origin $TAG
 
+      - name: Extract Changelog Entry
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        id: changelog
+        run: |
+          # Extract everything between the first ## and the second ## (or end of file)
+          SECTION=$(awk '/^## \[/{if (count++) exit} {if (count) print}' CHANGELOG.md)
+          
+          # Handle multi-line strings in GitHub Actions outputs
+          EOF=$(dd if=/dev/urandom bs=15 count=1 2>/dev/null | base64)
+          echo "notes<<$EOF" >> $GITHUB_ENV
+          echo "$SECTION" >> $GITHUB_ENV
+          echo "$EOF" >> $GITHUB_ENV
+
       - name: Rename APK for Release
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
@@ -54,8 +67,9 @@ jobs:
         with:
           tag_name: ${{ env.NEW_TAG }}
           name: ShekharPAIBypass ${{ env.NEW_TAG }}
+          body: ${{ env.notes }}
           files: app/build/outputs/apk/release/*.apk
-          generate_release_notes: true
+          generate_release_notes: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
