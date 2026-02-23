@@ -32,25 +32,25 @@ public class MainHook implements IXposedHookLoadPackage {
         XposedBridge.log("ShekharPAIBypass: Loaded for " + lpparam.packageName);
 
         try {
+            // We run the scanner as early as possible in handleLoadPackage
+            // using the appInfo sourceDir instead of waiting for Application.onCreate
+            if (lpparam.appInfo != null) {
+                runUniversalScanner(lpparam.appInfo.sourceDir, lpparam.classLoader);
+            }
+        } catch (Throwable t) {
+            XposedBridge.log("ShekharPAIBypass: Early universal scanner failed: " + t.getMessage());
+        }
+
+        try {
             XposedHelpers.findAndHookMethod(Application.class, "onCreate", new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     try {
                         Context context = (Context) param.thisObject;
-                        XposedBridge.log("ShekharPAIBypass: Starting Universal Heuristic Scan for " + context.getPackageName());
-                        
-                        // We run this in a thread to avoid blocking the UI thread too long, 
-                        // though we want it to finish quickly.
-                        new Thread(() -> {
-                            try {
-                                runUniversalScanner(context);
-                            } catch (Throwable t) {
-                                XposedBridge.log("ShekharPAIBypass: Scanner thread error: " + t.getMessage());
-                            }
-                        }).start();
-                        
+                        XposedBridge.log("ShekharPAIBypass: Late-phase scan check for " + context.getPackageName());
+                        // runUniversalScanner(context.getApplicationInfo().sourceDir, context.getClassLoader());
                     } catch (Throwable t) {
-                        XposedBridge.log("ShekharPAIBypass: Error in onCreate hook: " + t.getMessage());
+                        XposedBridge.log("ShekharPAIBypass: Error in late-phase check: " + t.getMessage());
                     }
                 }
             });
@@ -478,12 +478,10 @@ public class MainHook implements IXposedHookLoadPackage {
     }
 
 
-    private void runUniversalScanner(Context context) {
+    private void runUniversalScanner(String sourceDir, ClassLoader classLoader) {
         try {
-            ApplicationInfo ai = context.getApplicationInfo();
-            DexFile dexFile = new DexFile(ai.sourceDir);
+            DexFile dexFile = new DexFile(sourceDir);
             Enumeration<String> entries = dexFile.entries();
-            ClassLoader classLoader = context.getClassLoader();
 
             int matchesFound = 0;
             while (entries.hasMoreElements()) {
@@ -520,7 +518,8 @@ public class MainHook implements IXposedHookLoadPackage {
         
         // Package-based scoring
         if (name.contains("protectt") || name.contains("nsdl") || name.contains("guard") || 
-            name.contains("security") || name.contains("rasp") || name.contains("interactor")) {
+            name.contains("security") || name.contains("rasp") || name.contains("interactor") ||
+            name.contains("integrity") || name.contains("safety") || name.contains("tamper")) {
             score += 20;
         }
 
@@ -544,7 +543,10 @@ public class MainHook implements IXposedHookLoadPackage {
         // 1. Semantic Match
         if (name.contains("rooted") || name.contains("hook") || name.contains("xposed") || 
             name.contains("detect") || name.contains("check") || name.contains("emulator") || 
-            name.contains("proxy") || name.contains("developer") || name.contains("adb")) {
+            name.contains("proxy") || name.contains("developer") || name.contains("adb") || 
+            name.contains("magisk") || name.contains("zygisk") || name.contains("jailbreak") ||
+            name.contains("integrity") || name.contains("safety") || name.contains("tamper") ||
+            name.contains("debug") || name.contains("virtual") || name.contains("sandbox")) {
             score += 15;
         }
 
