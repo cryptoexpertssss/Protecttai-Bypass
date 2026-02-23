@@ -35,7 +35,7 @@ public class MainHook implements IXposedHookLoadPackage {
             // We run the scanner as early as possible in handleLoadPackage
             // using the appInfo sourceDir instead of waiting for Application.onCreate
             if (lpparam.appInfo != null) {
-                runUniversalScanner(lpparam.appInfo.sourceDir, lpparam.classLoader);
+                runUniversalScanner(lpparam.packageName, lpparam.appInfo.sourceDir, lpparam.classLoader);
             }
         } catch (Throwable t) {
             XposedBridge.log("ShekharPAIBypass: Early universal scanner failed: " + t.getMessage());
@@ -405,7 +405,8 @@ public class MainHook implements IXposedHookLoadPackage {
                     "com.frida.server", "re.frida.server", "bin.mt.plus", "dialog.box",
                     "com.studio.duckdetector", "org.frknkrc44.hma_oss", "top.ltfan.notdeveloper",
                     "com.network.proxy", "com.resukisu.resukisu", "com.smartpack.packagemanager",
-                    "tech.httptoolkit.pinning_demo", "com.jrummyapps.rootchecker"
+                    "tech.httptoolkit.pinning_demo", "com.jrummyapps.rootchecker",
+                    "com.dtm.trustmealready", "com.xposed.disableflagsecure", "com.github.longdt.novpndetect"
                 ));
 
                 XC_MethodHook hidePackageHook = new XC_MethodHook() {
@@ -527,7 +528,25 @@ public class MainHook implements IXposedHookLoadPackage {
     }
 
 
-    private void runUniversalScanner(String sourceDir, ClassLoader classLoader) {
+        private static final String[] TARGET_PACKAGES = {
+        "com.csam.icici", "com.suryoday", "com.hdfc", "com.yesbank", 
+        "com.nsdlpb", "com.msf.kbank", "com.idfc", "com.axismobile", 
+        "in.org.npci", "com.icicibank"
+    };
+
+    private void runUniversalScanner(String packageName, String sourceDir, ClassLoader classLoader) {
+        boolean isTarget = false;
+        for (String target : TARGET_PACKAGES) {
+            if (packageName.contains(target)) {
+                isTarget = true;
+                break;
+            }
+        }
+
+        if (!isTarget) return;
+
+        XposedBridge.log("ShekharPAIBypass: Starting Universal Heuristic Scan for " + packageName);
+
         try {
             DexFile dexFile = new DexFile(sourceDir);
             Enumeration<String> entries = dexFile.entries();
@@ -536,10 +555,12 @@ public class MainHook implements IXposedHookLoadPackage {
             while (entries.hasMoreElements()) {
                 String className = entries.nextElement();
                 
-                // Skip system/heavy libs
+                // Aggressive skip for common large libraries
                 if (className.startsWith("android.") || className.startsWith("androidx.") || 
                     className.startsWith("com.google.") || className.startsWith("java.") || 
-                    className.startsWith("kotlin.")) continue;
+                    className.startsWith("kotlin.") || className.startsWith("com.facebook.") ||
+                    className.startsWith("okhttp3.") || className.startsWith("com.google.android.gms") ||
+                    className.startsWith("com.clevertap.") || className.startsWith("com.netcore.")) continue;
 
                 Class<?> clazz = XposedHelpers.findClassIfExists(className, classLoader);
                 if (clazz == null) continue;
