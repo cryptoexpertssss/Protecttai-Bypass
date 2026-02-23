@@ -1,0 +1,43 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [v1.0-b30] - 2026-02-22
+
+### Fixed
+
+- **Critical NSDL Jiffy Fix**: Resolved a crash/auto-close issue where static methods would cause a `NullPointerException` during logging.
+- **Enhanced Primitive Support**: Added handling for `long`, `float`, `double`, etc., to prevent unboxing errors in various banking apps.
+- **Universal Trace Logging**: Added more verbose logging for class discovery to help debug on devices without needing a full stack trace.
+- **Target Expansion**: Added `p0.m` as a known target for NSDL Jiffy.
+
+<<<<<<< HEAD
+=======
+## [v1.0-b27] - 2026-02-22
+
+### Fixed
+
+- **App Crash Fix**: Resolved "App not installed" and "Auto-closing" issues by implementing robust `Throwable` catch blocks around all hooks.
+- **Safety**: Fixed NullPointerExceptions when hooking methods with primitive return types (boolean/int).
+- **LSPosed Compatibility**: Aligned module with LSPosed scoping correctly.
+
+>>>>>>> 5b9cbb28b9343d8f582cf68d8fc282564befd12d
+## [v1.0-b26] - 2026-02-22
+
+### Changed
+
+- **Rebranding**: Fully renamed project to `ShekharPAIBypass`.
+- **Package Name**: Renamed to `com.sch.pai.bypass`.
+- **APK Signing**: Enabled debug signing for release builds to ensure APKs are installable.
+
+## [v1.0-b25] - 2026-02-22
+
+### Added
+
+- **Universal Bypass**: Implemented dynamic signature-based scanning for Protectt.ai RASP SDK.
+- **Automation**: Added GitHub Actions for auto-building and auto-releasing on push to main.
+- **Naming**: Configured APK name as `ShekharPAIBypass-<tag>.apk`.
+
+## [v1.0] - Initial Release
+
+- Initial implementation for Kotak Neo bypass.

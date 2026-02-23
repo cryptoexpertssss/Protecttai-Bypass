@@ -1,0 +1,5 @@
+--------- beginning of crash
+01-01 12:48:51.391   611   611 F libc    : Fatal signal 6 (SIGABRT), code -1 (SI_QUEUE) in tid 611 (init), pid 611 (init)
+01-01 12:48:51.403   611   611 F libc    : crash_dump helper failed to exec
+01-01 12:48:51.406   618   618 F libc    : Fatal signal 6 (SIGABRT), code -1 (SI_QUEUE) in tid 618 (init), pid 618 (init)
+01-01 12:48:51.414   618   618 F libc    : crash_dump helper failed to exec

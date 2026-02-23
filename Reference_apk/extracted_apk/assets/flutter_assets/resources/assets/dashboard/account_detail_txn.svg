@@ -1,0 +1,26 @@
+<svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="11.5" y="54.5203" width="48" height="4" stroke="#EBA93A"/>
+<rect x="13.5" y="50.5203" width="44" height="4" stroke="#EBA93A"/>
+<mask id="path-3-inside-1_1_298" fill="white">
+<path d="M13 24.0203H58V29.0203H13V24.0203Z"/>
+</mask>
+<path d="M58 29.0203V30.0203H59V29.0203H58ZM13 29.0203H12V30.0203H13V29.0203ZM57 24.0203V29.0203H59V24.0203H57ZM58 28.0203H13V30.0203H58V28.0203ZM14 29.0203V24.0203H12V29.0203H14Z" fill="#EBA93A" mask="url(#path-3-inside-1_1_298)"/>
+<rect x="14.5" y="28.5203" width="6" height="3" stroke="#EBA93A"/>
+<rect x="14.5" y="46.5203" width="6" height="3" stroke="#EBA93A"/>
+<rect x="15.5" y="31.5203" width="4" height="15" stroke="#EBA93A"/>
+<rect x="26.5" y="28.5203" width="6" height="3" stroke="#EBA93A"/>
+<rect x="26.5" y="46.5203" width="6" height="3" stroke="#EBA93A"/>
+<rect x="27.5" y="31.5203" width="4" height="15" stroke="#EBA93A"/>
+<rect x="38.5" y="28.5203" width="6" height="3" stroke="#EBA93A"/>
+<rect x="38.5" y="46.5203" width="6" height="3" stroke="#EBA93A"/>
+<rect x="39.5" y="31.5203" width="4" height="15" stroke="#EBA93A"/>
+<rect x="50.5" y="28.5203" width="6" height="3" stroke="#EBA93A"/>
+<rect x="50.5" y="46.5203" width="6" height="3" stroke="#EBA93A"/>
+<rect x="51.5" y="31.5203" width="4" height="15" stroke="#EBA93A"/>
+<path d="M12 25.2146L36 11.5203" stroke="#EBA93A"/>
+<path d="M59.0136 25.0402L35.5 11.5204" stroke="#EBA93A"/>
+<rect x="11" y="24.0205" width="21" height="2" fill="#EBA93A"/>
+<rect x="39" y="24.0205" width="21" height="2" fill="#EBA93A"/>
+<rect x="35" y="24.0205" width="1" height="2" fill="#EBA93A"/>
+<circle cx="35.5" cy="18.5203" r="3" stroke="#EBA93A"/>
+</svg>

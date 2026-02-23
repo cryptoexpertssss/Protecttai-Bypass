@@ -1,0 +1,112 @@
+name: Build Android App
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+<<<<<<< HEAD
+      - name: Check for Signing Secrets
+        id: check_secrets
+        run: |
+          if [[ -n "${{ secrets.SIGNING_KEY }}" && -n "${{ secrets.ALIAS }}" && -n "${{ secrets.KEY_PASSWORD }}" ]]; then
+            echo "SIGNING_SECRET_READY=true" >> $GITHUB_ENV
+          else
+            echo "SIGNING_SECRET_READY=false" >> $GITHUB_ENV
+=======
+>>>>>>> 5b9cbb28b9343d8f582cf68d8fc282564befd12d
+      - name: Build with Gradle
+        run: ./gradlew assembleRelease
+
+      - name: Extract Version and Create Tag
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        id: versioning
+        run: |
+<<<<<<< HEAD
+          VERSION=$(grep "versionName" app/build.gradle | awk '{print $2}' | tr -d '"' | tr -d "'")
+=======
+          VERSION=$(grep "versionName" app/build.gradle | head -n 1 | awk -F'"' '{print $2}')
+>>>>>>> 5b9cbb28b9343d8f582cf68d8fc282564befd12d
+          TAG="v$VERSION-b${{ github.run_number }}"
+          echo "NEW_TAG=$TAG" >> $GITHUB_ENV
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag $TAG
+          git push origin $TAG
+
+      - name: Extract Changelog Entry
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        id: changelog
+        run: |
+<<<<<<< HEAD
+          # Extract everything between the first ## and the second ## (or end of file)
+          SECTION=$(awk '/^## \[/{if (count++) exit} {if (count) print}' CHANGELOG.md)
+
+          # Handle multi-line strings in GitHub Actions outputs
+=======
+          SECTION=$(awk '/^## \[/{if (count++) exit} {if (count) print}' CHANGELOG.md)
+>>>>>>> 5b9cbb28b9343d8f582cf68d8fc282564befd12d
+          EOF=$(dd if=/dev/urandom bs=15 count=1 2>/dev/null | base64)
+          echo "notes<<$EOF" >> $GITHUB_ENV
+          echo "$SECTION" >> $GITHUB_ENV
+          echo "$EOF" >> $GITHUB_ENV
+
+      - name: Prepare APK for Release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+<<<<<<< HEAD
+          if [ "${{ env.SIGNING_SECRET_READY }}" == "true" ]; then
+            APK_PATH="${{ steps.sign_app.outputs.signedReleaseFile }}"
+          else
+            APK_PATH="app/build/outputs/apk/release/app-release.apk"
+          fi
+=======
+          APK_PATH="app/build/outputs/apk/release/app-release.apk"
+>>>>>>> 5b9cbb28b9343d8f582cf68d8fc282564befd12d
+          cp "$APK_PATH" "ShekharPAIBypass-${{ env.NEW_TAG }}.apk"
+          echo "FINAL_APK=ShekharPAIBypass-${{ env.NEW_TAG }}.apk" >> $GITHUB_ENV
+
+      - name: Create Release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.NEW_TAG }}
+          name: ShekharPAIBypass ${{ env.NEW_TAG }}
+          body: ${{ env.notes }}
+          files: ${{ env.FINAL_APK }}
+          generate_release_notes: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+<<<<<<< HEAD
+          path: "*.apk"
+=======
+          path: "*.apk"
+>>>>>>> 5b9cbb28b9343d8f582cf68d8fc282564befd12d

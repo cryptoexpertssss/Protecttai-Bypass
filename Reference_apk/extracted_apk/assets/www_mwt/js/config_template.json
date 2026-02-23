@@ -1,0 +1,36 @@
+{
+    "nsdl_nsdl":
+    {
+        "appVersion": "1.0.0",
+        "appModuleId": "nsdl_nsdl",
+        "appName": "nsdl",
+        "newfiles": [
+            {
+                "version": "1.0.0",
+                "filename": "img.zip",
+                "datetime": "1509443984556",
+                "type": "image"
+            },
+            {
+                "version": "1.0.0",
+                "filename": "code.zip",
+                "datetime": "1509443984556",
+                "type": "code"
+            }],
+        "changedFiles": [
+            {
+                "version": "1.0.0",
+                "filename": "img.zip",
+                "datetime": "1509443984556",
+                "type": "image"
+            },
+            {
+                "version": "1.0.0",
+                "filename": "code.zip",
+                "datetime": "1509443984556",
+                "type": "code"
+            }],
+        "version": "1.0.0"
+    },
+    "config_version": "1.0.0"
+}

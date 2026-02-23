@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1">
+
+
+    <meta name="format-detection" content="telephone=no" />
+    <title>Nsdl Lifeinsurance</title>
+    <!-- ionic css -->
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/fileInjection.css" rel="stylesheet">
+    <!-- your app's css -->
+    <script src="lib/ionic/js/ionic.bundle.min.js"></script>
+    <script src="cordova.js" type="text/javascript"></script>
+    <script src="js/include/aes.js" type="text/javascript"></script>
+    <script src="js/include/aes-json-format.js" type="text/javascript"></script>
+    <!--TODO unComment zip files for production-->
+    <script src="js/include/dbHelper-0.0.1_zip.js" type="text/javascript"></script>
+<!--    <script src="js/include/dbHelper-0.0.1.js" type="text/javascript"></script>-->
+    <script src="js/angular-translate.min.js" type="text/javascript"></script>
+    <script src="js/ng-cordova.js"></script>
+    <!-- <script src="js/jquery-1.7.1.min.js" type="text/javascript"></script> -->
+    <script src="js/jquery-3.4.1.min.js" type="text/javascript"></script>
+
+    
+    <script src="js/constants.js"></script>
+    <!--TODO unComment zip files for production-->
+<!--    <script src="js/fileInjection.js"></script>-->
+    <script src="js/fileInjection_zip.js"></script>
+    <!-- loader resources -->
+    <link rel="stylesheet" type="text/css" href="js/include/loading-bar.css" />
+    <script type="text/javascript" src="js/include/loading-bar.js"></script>
+</head>
+
+<body class="platform-android platform-cordova platform-webview fileInjectionLoaderBodyClass " style="background-color: white">
+
+<div style="" class="loaderSDK">
+
+<!--    <div class="nsdlLoaderGif">-->
+
+<!--        <div style="position: absolute;bottom: 0px;text-align: center;left: 0;width: 100%;">-->
+<!--            <p style="margin-left: auto;color: white;margin-right: auto;">Please wait</p>-->
+<!--        </div>-->
+<!--    </div>-->
+    <img class="title-image"  src="img/layerheader.png" style="display:none">
+    <div class="nav-bar-block" nav-bar="active">
+        <ion-header-bar class="headerBarSDK bar bar-header disable-user-behavior" align-title="left"><button
+                class="button back-button hide buttons button-clear header-item" ng-click=""
+                style=""><i class="icon ota_bmbBack"
+                            style="background: url(&quot;img/backarrow.png&quot;) no-repeat;"></i>
+            <span class="back-text" style=""></span></button>
+            <div class="buttons buttons-left" style=""><span class="left-buttons"><button
+                    class="customButtonBack button headerButtons"
+                    ng-click="onHeaderIconsClick('customBack')"><img
+                    src="img/backarrow.png"></button></span>
+            </div>
+            <div class="title title-left header-item" style="left: 70px;"><span
+                    class="HeaderTitle nav-bar-title"><img class="title-image"
+                                                           src="img/header.png"></span>
+            </div>
+        </ion-header-bar>
+
+    </div>
+    <div class="button-bar"><a class="button button-full activeSeg" class="activeSeg">INSURANCE</a>
+        <a class="button button-full avoid-clicks" ></a>
+        <a class="button button-full avoid-clicks" ></a>
+    </div>
+    <div class="SliderSDK">
+
+    <div id="slider">
+        <div class="slides">
+            <img src="img/slider1.png" width="100%" />
+        </div>
+
+        <div class="slides">
+            <img src="img/slider2.png" width="100%" />
+        </div>
+
+        <div id="dot" style="display:none">
+            <span class="dot" ></span>
+            <span class="dot"></span>
+        </div>
+    </div>
+    </div>
+
+</div>
+<ion-nav-view animation="slide-left-right"></ion-nav-view>
+
+
+<div id="fileInjectionLoaderParentDiv" class="fileInjectionLoaderParentDivClass">
+
+        <div id="myProgress">
+            <div id="myBar" class="label-center"></div>
+            <p id="fileCount"></p>
+        </div>
+
+    </div>
+</body>
+
+</html>

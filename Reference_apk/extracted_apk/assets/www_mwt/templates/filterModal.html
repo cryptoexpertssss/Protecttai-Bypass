@@ -1,0 +1,128 @@
+<div class="modal transparent">
+    <div class="card">
+        <i class="icon ion-ios-close close-modal" ng-click="closeModal()"></i>
+        <div class="item item-text-wrap">
+            <label class="container">This week
+                <input type="radio" ng-checked="{{filterBy==0}}" name="radio" ng-model="filterBy" value="0">
+                <span class="checkmark"></span>
+            </label>
+            <label class="container">Last week
+                <input type="radio" name="radio" value="1" ng-model="filterBy">
+                <span class="checkmark"></span>
+            </label>
+            <label class="container">This month
+                <input type="radio" name="radio" value="2" ng-model="filterBy">
+                <span class="checkmark"></span>
+            </label>
+            <label class="container">Last month
+                <input type="radio" name="radio" value="3" ng-model="filterBy">
+                <span class="checkmark"></span>
+            </label>
+            <span class="ok" ng-click="onCustomEventHandler('filterHiistory','','transactionHistory',filterBy)">Ok</span>
+        </div>
+    </div>
+
+    <style>
+        input[type=radio] {
+            float: left;
+            margin-left: -138px;
+            margin-top: 5px;
+
+        }
+
+        .ok {
+            float: right;
+            color: #3D68E8;
+            padding-bottom: 20px;
+        }
+
+        /* The container */
+
+       .transparent {
+            background: transparent !important;
+            width: 84%;
+            left: 8%;
+            top: 40%;
+        }
+
+        .container {
+            display: block;
+            position: relative;
+            padding-left: 35px;
+            margin-top: 20px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* Hide the browser's default radio button */
+
+        .container input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+
+        }
+
+        /* Create a custom radio button */
+
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 25px;
+            width: 25px;
+            border-radius: 50%;
+            background-color: #fff;
+            z-index: -2;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" width="100%" height="100%" preserveAspectRatio="none"><defs><linearGradient id="gradient"><stop offset="0" style="stop-color:#0CBFE8" /><stop offset="100" style="stop-color:#3B70E8" /></linearGradient></defs><ellipse ry="100" rx="100" cy="110" cx="110" style="fill:none;stroke:url(#gradient);stroke-width:20;" /></svg>');
+
+
+        }
+
+        /* On mouse-over, add a grey background color */
+
+        .container:hover input~.checkmark {
+            background-color: #ffffff;
+
+        }
+
+        /* When the radio button is checked, add a blue background */
+
+        .container input:checked~.checkmark {
+            background-color: #fff;
+            border-radius: 50%;
+            z-index: -2;
+        }
+
+        /* Create the indicator (the dot/circle - hidden when not checked) */
+
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        /* Show the indicator (dot/circle) when checked */
+
+        .container input:checked~.checkmark:after {
+            display: block;
+            position: absolute;
+
+        }
+
+        /* Style the indicator (dot/circle) */
+
+        .container .checkmark:after {
+            top: 7px;
+            left: 7px;
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background: linear-gradient(180deg, #0CBFE8 0%, #3B70E8 100%);
+            z-index: -2;
+        }
+    </style>

@@ -1,0 +1,210 @@
+{
+  "professionCode": [
+    {
+      "parammappingvalue": "Salaried - Public Sector",
+      "paramactvalue": "1",
+      "image": "ic_onboard_salaried_white"
+    },
+    {
+      "parammappingvalue": "Salaried - Private Sector",
+      "paramactvalue": "2",
+      "image": "ic_onboard_salaried_white"
+    },
+    {
+      "parammappingvalue": "Salaried - Government",
+      "paramactvalue": "8",
+      "image": "ic_onboard_salaried_white"
+    },
+    {
+      "parammappingvalue": "Housewife",
+      "paramactvalue": "4",
+      "image": "ic_onboard_housewife"
+    },
+    {
+      "parammappingvalue": "Others - Self Employed",
+      "paramactvalue": "17",
+      "image": "ic_onboard_self_employed_white"
+    },
+    {
+      "parammappingvalue": "Student",
+      "paramactvalue": "5",
+      "image": "ic_onboard_student"
+    },
+    {
+      "parammappingvalue": "Stock Broker",
+      "paramactvalue": "9",
+      "image": "ic_onboard_broker"
+    },
+    {
+      "parammappingvalue": "Trader",
+      "paramactvalue": "11",
+      "image": "ic_onboard_trader_white"
+    },
+    {
+      "parammappingvalue": "Retired",
+      "paramactvalue": "3",
+      "image": "ic_onboard_retired_white"
+    },
+    {
+      "parammappingvalue": "Real Estate",
+      "paramactvalue": "10",
+      "image": "ic_onboard_real_estate_white"
+    },
+    {
+      "parammappingvalue": "CA/CS",
+      "paramactvalue": "16",
+      "image": "ic_onboard_accountant_white"
+    },
+    {
+      "parammappingvalue": "Agriculture",
+      "paramactvalue": "13",
+      "image": "ic_onboard_agriculture_white"
+    },
+    {
+      "parammappingvalue": "Law firm/Lawyer",
+      "paramactvalue": "15",
+      "image": "ic_onboard_lawyer"
+    },
+    {
+      "parammappingvalue": "Gems and Jewellery Business",
+      "paramactvalue": "12",
+      "image": "ic_onboard_gems_and_jwlry_business"
+    },
+    {
+      "parammappingvalue": "Petroleum Products",
+      "paramactvalue": "14",
+      "image": "ic_onboard_petrolium_products_white"
+    },
+    {
+      "parammappingvalue": "Others",
+      "paramactvalue": "7",
+      "image": "ic_onboard_none_others"
+    }
+  ],
+  "isStaff": [
+    {
+      "parammappingvalue": "Yes",
+      "paramactvalue": "Y"
+    },
+    {
+      "parammappingvalue": "No",
+      "paramactvalue": "N"
+    }
+  ],
+  "prefix": [
+    {
+      "parammappingvalue": "Master",
+      "paramactvalue": "Master"
+    },
+    {
+      "parammappingvalue": "Others",
+      "paramactvalue": "Others"
+    },
+    {
+      "parammappingvalue": "MR.",
+      "paramactvalue": "MR."
+    },
+    {
+      "parammappingvalue": "MRS.",
+      "paramactvalue": "MRS."
+    },
+    {
+      "parammappingvalue": "MS.",
+      "paramactvalue": "MS."
+    }
+  ],
+  "maritalStatus": [
+    {
+      "parammappingvalue": "Single",
+      "paramactvalue": "1",
+      "image": "ic_onboard_single"
+    },
+    {
+      "parammappingvalue": "Married",
+      "paramactvalue": "2",
+      "image": "ic_onboard_married"
+    }
+  ],
+  "annualIncome": [
+    {
+      "parammappingvalue": "\u20B9 0 - \u20B9 5,00,000",
+      "paramactvalue": "1",
+      "image": "ic_onboard_income_one"
+    },
+    {
+      "parammappingvalue": "\u20B9 5,00,001 – \u20B9 10,00,000",
+      "paramactvalue": "2",
+      "image": "ic_onboard_income_one"
+    },
+    {
+      "parammappingvalue": "\u20B9 10,00,001 – \u20B9 30,00,000",
+      "paramactvalue": "3",
+      "image": "ic_onboard_income_one"
+    },
+    {
+      "parammappingvalue": "\u20B9 30,00,001 - \u20B9 50,00,000",
+      "paramactvalue": "4",
+      "image": "ic_onboard_income_one"
+    },
+    {
+      "parammappingvalue": "\u20B9 50,00,001 - \u20B9 1 Cr",
+      "paramactvalue": "5",
+      "image": "ic_onboard_income_one"
+    },
+    {
+      "parammappingvalue": "\u20B9 1 Cr & Above",
+      "paramactvalue": "6",
+      "image": "ic_onboard_income_one"
+    }
+  ],
+  "nomineeRelationship": [
+    {
+      "parammappingvalue": "Father",
+      "paramactvalue": "1",
+      "image": "ic_onboard_father",
+      "mfvalue": "9"
+    },
+    {
+      "parammappingvalue": "Mother",
+      "paramactvalue": "2",
+      "image": "ic_onboard_mother",
+      "mfvalue": "2"
+    },
+    {
+      "parammappingvalue": "Son",
+      "paramactvalue": "3",
+      "image": "ic_onboard_son",
+      "mfvalue": "4"
+    },
+    {
+      "parammappingvalue": "Daughter",
+      "paramactvalue": "4",
+      "image": "ic_onboard_daughter",
+      "mfvalue": "5"
+    },
+    {
+      "parammappingvalue": "Spouse",
+      "paramactvalue": "5",
+      "image": "ic_onboard_spouse",
+      "mfvalue": "10"
+    },
+    {
+      "parammappingvalue": "Sister",
+      "paramactvalue": "7",
+      "image": "ic_onboard_sister",
+      "mfvalue": "11"
+    },
+    {
+      "parammappingvalue": "Brother",
+      "paramactvalue": "8",
+      "image": "ic_onboard_brother",
+      "mfvalue": "17"
+    },
+    {
+      "parammappingvalue": "Others",
+      "paramactvalue": "9",
+      "image": "ic_onboard_none_others",
+      "mfvalue": "1009"
+    }
+  ]
+}

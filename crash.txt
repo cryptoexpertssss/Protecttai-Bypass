@@ -1,0 +1,478 @@
+--------- beginning of perf
+02-23 00:57:00.207  1471  3767 I 100     : Open /system/priv-app/FusedLocation/FusedLocation.apk took:52ms
+02-23 00:57:00.239  1471  3769 I 100     : Open /system/priv-app/FusedLocation/FusedLocation.apk took:73ms
+02-23 00:57:00.255  1471  3768 I 100     : Open /system/priv-app/FusedLocation/FusedLocation.apk took:78ms
+02-23 00:57:00.577  1471  3736 I 100     : Open /system/priv-app/Telecom/Telecom.apk took:482ms
+02-23 00:57:00.651  1471  3735 I 100     : Open /system/priv-app/Telecom/Telecom.apk took:556ms
+02-23 00:57:00.707  1471  3737 I 100     : Open /system/priv-app/Telecom/Telecom.apk took:612ms
+02-23 00:57:01.246  3760  3760 I 309     : package:com.android.phone took:1037 calssname:android.app.ActivityThread$H callback:null what:110
+02-23 00:57:01.354  2904  2904 I 309     : package:com.android.systemui took:2359 calssname:android.app.ActivityThread$H callback:null what:114
+02-23 00:57:08.759  4579  4579 I 100     : Open /data/app/~~TsifplT8jDE4Nwne8ENGsg==/com.google.android.apps.wellbeing-M2DXO-lfEnE7kOpTTJ6skw==/base.apk took:82ms
+02-23 00:57:09.553  4672  4672 I 100     : Open /data/app/~~H_gIp3nxzyq2yMxW_c054A==/com.google.android.googlequicksearchbox-ePajk4SqssSfJRKTf-oGMw==/base.apk took:233ms
+02-23 00:57:10.440  5110  5110 I 100     : Open /data/app/~~v2MLmSR2lXdT3Aso_-KThQ==/com.google.android.projection.gearhead-krPf8PRAPVtXuHiwbb-sQQ==/base.apk took:125ms
+02-23 00:57:10.891  4726  4726 I 309     : package:com.android.nfc took:1560 calssname:android.app.ActivityThread$H callback:null what:110
+02-23 00:57:11.400  5557  5557 I 100     : Open /data/app/~~EMHQZ_XhySKjwsS9F860xA==/com.oneplus.gamespace-qF5g_3wzRx0csR7ZB3fdZg==/base.apk took:112ms
+02-23 00:57:11.547  5638  5638 I 100     : Open /data/app/~~H_gIp3nxzyq2yMxW_c054A==/com.google.android.googlequicksearchbox-ePajk4SqssSfJRKTf-oGMw==/base.apk took:96ms
+02-23 00:57:12.036  2788  2788 I 309     : package:net.oneplus.launcher took:2149 calssname:android.app.ActivityThread$H callback:null what:110
+02-23 00:57:13.046  2904  3889 I 110     :  OptJank - total:87 frameGap:92 delta#66#18#9#0#0#2
+02-23 00:57:13.457  2788  2788 I 309     : package:net.oneplus.launcher took:1421 calssname:android.app.ActivityThread$H callback:null what:159
+02-23 00:57:14.088  1471  2578 I 322     : net.oneplus.launcher#10670#14858
+02-23 00:57:14.573  1471  2581 I 300     : 509
+02-23 00:57:15.158  6883  6883 I 100     : Open /data/app/~~6PlnOOX9VRcHcjuZ_VKLOw==/com.android.vending-EVB_iaCIvFCrw-1UEPEhHg==/base.apk took:174ms
+02-23 00:57:15.299  2904  3889 I 111     :  OptJank - continuously drops frames:4
+02-23 00:57:15.503  2904  3889 I 111     : OptJank - big and small
+02-23 00:57:15.684  2904  3889 I 110     :  OptJank - total:96 frameGap:96 delta#83#15#6#7#0#0
+02-23 00:57:15.865  6504  6845 I 100     : Open /data/app/~~4cz1r4shV35tmGD9fDhiFA==/com.google.android.gms-7zQf4gaHMsB3yk_zhZEPJQ==/split_DynamiteLoader_installtime.apk took:468ms
+02-23 00:57:15.918  2904  3889 I 111     :  OptJank - continuously drops frames:4
+02-23 00:57:15.940  6768  6768 I 309     : package:com.oneplus.mms took:1300 calssname:android.app.ActivityThread$H callback:null what:110
+02-23 00:57:16.706  6504  6845 I 101     : #840
+02-23 00:57:16.973  5688  5755 I 101     : #275
+02-23 00:57:17.634  7678  7678 I 100     : Open /data/app/~~H_gIp3nxzyq2yMxW_c054A==/com.google.android.googlequicksearchbox-ePajk4SqssSfJRKTf-oGMw==/base.apk took:162ms
+02-23 00:57:19.080  8411  8411 I 100     : Open /system/app/Traceur/Traceur.apk took:56ms
+02-23 00:57:19.327  8532  8532 I 100     : Open /system/priv-app/OnePlusWizard/OnePlusWizard.apk took:106ms
+02-23 00:57:24.238 10131 10131 I 309     : package:com.oneplus.opwlb took:1068 calssname:android.app.ActivityThread$H callback:android.app.-$$Lambda$LoadedApk$ReceiverDispatcher$Args$_BumDX2UKsnxLVrE6UJsJZkotuA@f7a75c4 what:0
+02-23 00:57:25.897 11221 11221 I 100     : Open /data/app/~~6PlnOOX9VRcHcjuZ_VKLOw==/com.android.vending-EVB_iaCIvFCrw-1UEPEhHg==/base.apk took:80ms
+02-23 00:57:33.839 12148 12148 I 100     : Open /data/app/~~DVOBl-1NHCYdWbDxI9Vshg==/com.google.android.apps.maps-tEMAEht8POXoomX5Buz22g==/base.apk took:208ms
+02-23 00:57:34.861 12148 12148 I 309     : package:com.google.android.apps.maps took:1244 calssname:android.app.ActivityThread$H callback:null what:110
+02-23 00:57:35.027 12148 12191 I 100     : Open /data/app/~~4cz1r4shV35tmGD9fDhiFA==/com.google.android.gms-7zQf4gaHMsB3yk_zhZEPJQ==/split_GoogleCertificates_installtime.apk took:53ms
+02-23 00:57:36.328  1471  2578 I 322     : com.resukisu.resukisu#-1#983
+02-23 00:57:37.223 12313 12313 I 309     : package:com.google.android.projection.gearhead took:1158 calssname:android.app.ActivityThread$H callback:null what:110
+02-23 00:57:38.114 12471 12471 I 100     : Open /data/app/~~DVOBl-1NHCYdWbDxI9Vshg==/com.google.android.apps.maps-tEMAEht8POXoomX5Buz22g==/base.apk took:78ms
+02-23 00:57:38.638 12501 12501 I 100     : Open /data/app/~~U9BflnOzWBHzH2iD3kBzWQ==/com.google.android.apps.photos-Rdc1jByi2e2watJIli7F6g==/base.apk took:114ms
+02-23 00:57:38.805  2790 12298 I 110     :  OptJank - total:143 frameGap:156 delta#0#140#0#107#0#3
+02-23 00:57:39.389 12555 12555 I 100     : Open /data/app/~~yE_aEEm-nG4lhYy0a2KIqw==/com.google.android.apps.tachyon--ipxxxTv8bFDoSNOTQqlhw==/base.apk took:113ms
+02-23 00:57:56.568  1471  2578 I 322     : moe.haruue.wadb#642#980
+02-23 00:57:56.725 13043 13043 I 100     : Open /data/app/~~abABbug0VrXQ3q4JxN-esQ==/com.google.android.apps.youtube.music-YXZbQ3KDHYrwTli1EXcHOQ==/base.apk took:92ms
+02-23 00:57:57.914 13224 13224 I 100     : Open /data/app/~~pXI9UK18AUverFXJq6t5Hg==/com.google.android.calendar-2CkBJv8bdHLGEdp_7jfJsA==/base.apk took:103ms
+02-23 00:57:59.119 13224 13224 I 309     : package:com.google.android.calendar took:1346 calssname:android.app.ActivityThread$H callback:null what:110
+02-23 00:58:01.008 13431 13431 I 100     : Open /data/app/~~OxPw7XC-ppbwv68uIVeaBg==/com.google.android.gm-eBYDBpGZdjsMtEA2EvGSoA==/base.apk took:91ms
+02-23 00:58:05.414 13431 13589 I 101     : #163
+02-23 00:58:08.158 13655 13655 I 309     : package:com.android.providers.contacts took:1542 calssname:android.app.ActivityThread$H callback:null what:110
+02-23 00:58:08.371  2788  2788 I 309     : package:net.oneplus.launcher took:1168 calssname:android.app.ActivityThread$H callback:null what:114
+02-23 00:58:08.929 13698 13698 I 100     : Open /data/app/~~H_gIp3nxzyq2yMxW_c054A==/com.google.android.googlequicksearchbox-ePajk4SqssSfJRKTf-oGMw==/base.apk took:99ms
+02-23 00:58:13.456  3760  3760 I 309     : package:com.android.phone took:1140 calssname:com.qualcomm.qti.internal.telephony.QtiServiceStateTracker callback:null what:4
+02-23 00:58:19.172  3760  3760 I 309     : package:com.android.phone took:2679 calssname:android.app.ActivityThread$H callback:com.android.ims.-$$Lambda$FeatureConnector$1$Fr-H9dx1qByyvlwkxmZ3PK1oz7w@41fe46a what:0
+02-23 00:58:20.452  3760  3760 I 309     : package:com.android.phone took:1080 calssname:com.qualcomm.qti.internal.telephony.QtiServiceStateTracker callback:null what:4
+02-23 00:58:25.670  6883  6883 I 309     : package:com.android.vending took:9786 calssname:android.app.job.JobServiceEngine$JobHandler callback:null what:2
+02-23 00:58:33.559  1471  2667 I 106     : System spent 201.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.559  1471  2667 I 106     : System spent 201.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.559  1471  2667 I 106     : System spent 201.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.559  1471  2667 I 106     : System spent 201.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.559  1471  2667 I 106     : System spent 201.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.559  1471  2667 I 106     : System spent 199.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.559  1471  2667 I 106     : System spent 198.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.559  1471  2667 I 106     : System spent 197.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.559  1471  2667 I 106     : System spent 197.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.559  1471  2667 I 106     : System spent 197.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.559  1471  2667 I 106     : System spent 197.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.559  1471  2667 I 106     : System spent 196.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.559  1471  2667 I 106     : System spent 196.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.559  1471  2667 I 106     : System spent 195.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.559  1471  2667 I 106     : System spent 195.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.559  1471  2667 I 106     : System spent 195.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.559  1471  2667 I 106     : System spent 194.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.559  1471  2667 I 106     : System spent 193.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.559  1471  2667 I 106     : System spent 193.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.559  1471  2667 I 106     : System spent 193.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.560  1471  2667 I 106     : System spent 193.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.560  1471  2667 I 106     : System spent 192.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.560  1471  2667 I 106     : System spent 192.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.560  1471  2667 I 106     : System spent 192.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.560  1471  2667 I 106     : System spent 192.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.560  1471  2667 I 106     : System spent 191.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.560  1471  2667 I 106     : System spent 191.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.560  1471  2667 I 106     : System spent 191.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.560  1471  2667 I 106     : System spent 191.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.560  1471  2667 I 106     : System spent 190.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.560  1471  2667 I 106     : System spent 190.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.560  1471  2667 I 106     : System spent 190.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.560  1471  2667 I 106     : System spent 190.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.560  1471  2667 I 106     : System spent 189.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.560  1471  2667 I 106     : System spent 189.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.560  1471  2667 I 106     : System spent 189.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.560  1471  2667 I 106     : System spent 189.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.560  1471  2667 I 106     : System spent 188.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.560  1471  2667 I 106     : System spent 188.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.560  1471  2667 I 106     : System spent 187.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.560  1471  2667 I 106     : System spent 187.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.560  1471  2667 I 106     : System spent 186.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 143.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 142.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 142.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 142.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 142.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 141.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 141.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 141.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 140.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 140.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 139.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 138.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 138.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 138.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 137.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 137.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 137.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 137.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 136.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 136.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 136.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 136.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 135.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 135.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 135.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 135.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 135.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 134.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 134.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 134.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 134.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 133.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 133.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 133.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 133.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 132.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 132.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 132.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 132.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 131.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 131.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 131.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 131.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 131.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 130.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 130.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 130.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 130.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 130.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 130.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 129.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.562  1471  2667 I 106     : System spent 129.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.564  1471  2667 I 106     : System spent 132.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.564  1471  2667 I 106     : System spent 132.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.564  1471  2667 I 106     : System spent 132.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 132.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 131.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 131.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 130.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 130.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 130.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 130.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 130.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 130.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 129.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 129.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 129.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 129.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 129.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 127.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 127.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 127.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 126.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 126.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 126.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 126.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 126.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 125.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 125.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 125.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 124.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 124.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 124.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 124.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 124.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 123.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 123.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 122.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 122.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 122.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 121.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 121.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 121.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 121.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 120.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 110.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 109.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 109.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 108.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 108.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 108.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 108.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 108.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.565  1471  2667 I 106     : System spent 107.2ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.746  1471  2667 I 106     : System spent 109.7ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.746  1471  2667 I 106     : System spent 109.7ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.746  1471  2667 I 106     : System spent 108.7ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.746  1471  2667 I 106     : System spent 108.7ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.746  1471  2667 I 106     : System spent 105.7ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.746  1471  2667 I 106     : System spent 105.7ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.746  1471  2667 I 106     : System spent 105.7ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.746  1471  2667 I 106     : System spent 104.7ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.746  1471  2667 I 106     : System spent 104.7ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.746  1471  2667 I 106     : System spent 104.7ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.746  1471  2667 I 106     : System spent 104.7ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.747  1471  2667 I 106     : System spent 104.7ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.747  1471  2667 I 106     : System spent 103.7ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.747  1471  2667 I 106     : System spent 103.7ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.747  1471  2667 I 106     : System spent 103.7ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.747  1471  2667 I 106     : System spent 102.7ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.747  1471  2667 I 106     : System spent 102.7ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.747  1471  2667 I 106     : System spent 102.7ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.747  1471  2667 I 106     : System spent 102.7ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.747  1471  2667 I 106     : System spent 101.7ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.768  1471  2667 I 106     : System spent 128.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 128.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 128.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 128.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 128.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 127.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 127.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 127.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 127.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 127.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 126.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 126.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 126.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 126.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 125.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 125.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 125.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 124.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 124.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 124.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 123.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 123.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 123.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 123.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 122.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 122.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 122.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 122.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 121.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 121.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 121.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 121.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 119.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 118.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 118.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 118.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 117.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 116.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 116.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.769  1471  2667 I 106     : System spent 115.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.770  1471  2667 I 106     : System spent 115.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.770  1471  2667 I 106     : System spent 115.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.770  1471  2667 I 106     : System spent 114.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.770  1471  2667 I 106     : System spent 114.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.770  1471  2667 I 106     : System spent 114.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.770  1471  2667 I 106     : System spent 113.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.770  1471  2667 I 106     : System spent 113.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.770  1471  2667 I 106     : System spent 113.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.770  1471  2667 I 106     : System spent 113.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.770  1471  2667 I 106     : System spent 108.4ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.770  1471  2667 I 106     : System spent 114.9ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.770  1471  2667 I 106     : System spent 113.9ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.770  1471  2667 I 106     : System spent 112.9ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.770  1471  2667 I 106     : System spent 112.9ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.770  1471  2667 I 106     : System spent 110.9ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.770  1471  2667 I 106     : System spent 107.9ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:33.770  1471  2667 I 106     : System spent 106.9ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:35.412 14085 14085 I 309     : package:com.android.phone took:6721 calssname:android.app.ActivityThread$H callback:null what:110
+02-23 00:58:35.444 14974 14974 I 309     : package:com.google.android.partnersetup took:1393 calssname:android.app.ActivityThread$H callback:null what:113
+02-23 00:58:37.294 15946 15946 I 309     : package:com.google.android.setupwizard took:1452 calssname:android.app.ActivityThread$H callback:null what:110
+02-23 00:58:40.679 17382 17382 I 309     : package:com.google.android.videos took:1301 calssname:android.app.ActivityThread$H callback:null what:110
+02-23 00:58:41.716 18147 18147 I 100     : Open /data/app/~~N_FJpyiX4vKyyQ9Yb-bT-w==/com.google.android.youtube-nv9QM-cBrk9hs12gb5kwSg==/base.apk took:96ms
+02-23 00:58:42.791 18147 18600 I 100     : Open /data/user/0/com.google.android.youtube/app_pccache2/5/8C5AE28E06233ED046257CCB628AC34047ABB1F1/pcam.jar took:76ms
+02-23 00:58:45.775 14085 14085 I 309     : package:com.android.phone took:1436 calssname:com.qualcomm.qti.internal.telephony.QtiSubscriptionInfoUpdater callback:null what:3
+02-23 00:58:48.301 18793 18793 I 309     : package:com.oneplus.contacts took:2349 calssname:android.app.ActivityThread$H callback:null what:110
+02-23 00:58:51.262  1471  2667 I 106     : System spent 130.6ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.262  1471  2667 I 106     : System spent 130.6ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.262  1471  2667 I 106     : System spent 127.6ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.637  1471  2667 I 106     : System spent 111.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 111.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 110.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 110.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 110.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 110.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 109.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 108.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 108.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 108.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 108.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 107.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 107.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 107.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 107.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 107.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 106.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 106.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 106.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 106.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 106.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 105.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 105.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 105.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 105.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 105.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 105.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 104.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 104.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 104.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 104.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 103.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 103.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 103.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 102.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 102.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 102.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 102.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 101.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 101.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:51.638  1471  2667 I 106     : System spent 101.0ms processing the last motion event: MotionEvent#MOVE
+02-23 00:58:52.122 18985 18985 I 309     : package:com.oneplus.mms took:1420 calssname:android.app.ActivityThread$H callback:null what:110
+02-23 00:59:01.700 19904 19904 I 100     : Open /data/app/~~H_gIp3nxzyq2yMxW_c054A==/com.google.android.googlequicksearchbox-ePajk4SqssSfJRKTf-oGMw==/base.apk took:103ms
+02-23 00:59:14.712 20283 20283 I 100     : Open /data/app/~~abABbug0VrXQ3q4JxN-esQ==/com.google.android.apps.youtube.music-YXZbQ3KDHYrwTli1EXcHOQ==/base.apk took:72ms
+02-23 01:00:07.286 24063 24063 I 309     : package:com.oneplus.account took:1279 calssname:android.app.ActivityThread$H callback:null what:110
+02-23 01:00:59.076 25256 25280 I 101     : #270
+02-23 01:01:09.928  1471  2581 I 300     : 258
+02-23 01:01:24.859  1471  2581 I 300     : 61
+02-23 01:02:17.929 29669 29669 I 309     : package:com.oneplus.opwlb took:1238 calssname:android.app.ActivityThread$H callback:null what:110
+02-23 01:02:18.025 29608 29608 I 309     : package:com.google.android.setupwizard took:2202 calssname:android.app.ActivityThread$H callback:null what:110
+02-23 01:03:10.449  1471  2581 I 300     : 185
+02-23 01:03:11.522 29955 29955 I 100     : Open /data/app/~~DVOBl-1NHCYdWbDxI9Vshg==/com.google.android.apps.maps-tEMAEht8POXoomX5Buz22g==/base.apk took:105ms
+02-23 01:03:15.734  2904  3889 I 110     :  OptJank - total:88 frameGap:108 delta#83#3#3#0#0#1
+02-23 01:15:01.143 19457 19457 I 100     : Open /data/app/~~H_gIp3nxzyq2yMxW_c054A==/com.google.android.googlequicksearchbox-ePajk4SqssSfJRKTf-oGMw==/base.apk took:114ms
+02-23 01:15:02.698 20170 20170 I 100     : Open /data/app/~~H_gIp3nxzyq2yMxW_c054A==/com.google.android.googlequicksearchbox-ePajk4SqssSfJRKTf-oGMw==/base.apk took:121ms
+--------- beginning of main
+02-23 01:39:52.920  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pm8005_tz
+02-23 01:39:52.921  1228  1247 I chatty  : uid=0(root) thermal@2.0-ser identical 1 line
+02-23 01:39:52.921  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pm8005_tz
+02-23 01:39:52.924  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pa1-therml-adc
+02-23 01:39:52.925  1471  3650 I BatteryStatsService: In wakeup_callback: resumed from suspend
+02-23 01:39:52.943  1809  2619 I TEESimulator: Configuration file change detected: target.tmp (event: 8)
+02-23 01:39:52.944 19703  9160 W adbd    : timed out while waiting for FUNCTIONFS_BIND, trying again
+02-23 01:39:52.944 19703  9160 I adbd    : UsbFfs: connection terminated: monitor thread finished
+02-23 01:39:52.944 19703 19703 I adbd    : UsbFfs: already offline
+02-23 01:39:52.944 19703 19703 I adbd    : destroying transport UsbFfs
+02-23 01:39:52.944 19703 19703 I adbd    : UsbFfsConnection being destroyed
+02-23 01:39:52.969  1809  2619 I TEESimulator: Configuration file change detected: target.tmp (event: 8)
+02-23 01:39:53.007  1809  2619 I TEESimulator: Configuration file change detected: target.tmp (event: 8)
+02-23 01:39:54.547 19703 19707 I adbd    : opening control endpoint /dev/usb-ffs/adb/ep0
+02-23 01:39:54.549  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pm8005_tz
+02-23 01:39:54.549  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pm8005_tz
+02-23 01:39:54.550 19703 19707 I adbd    : UsbFfsConnection constructed
+02-23 01:39:54.550  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pm8005_tz
+02-23 01:39:54.550 19703  9450 I adbd    : UsbFfs-monitor thread spawned
+02-23 01:39:54.552  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pa1-therml-adc
+02-23 01:39:54.553  1471  3650 I BatteryStatsService: In wakeup_callback: resumed from suspend
+02-23 01:39:54.558  1809  2619 I TEESimulator: Configuration file change detected: target.tmp (event: 8)
+02-23 01:39:54.587  1809  2619 I chatty  : uid=0(root) FileObserver identical 1 line
+02-23 01:39:54.632  1809  2619 I TEESimulator: Configuration file change detected: target.tmp (event: 8)
+02-23 01:39:55.585  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pm8005_tz
+02-23 01:39:55.586  1228  1247 I chatty  : uid=0(root) thermal@2.0-ser identical 1 line
+02-23 01:39:55.587  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pm8005_tz
+02-23 01:39:55.591  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pa1-therml-adc
+02-23 01:39:55.592  1471  3650 I BatteryStatsService: In wakeup_callback: resumed from suspend
+02-23 01:39:55.596  1809  2619 I TEESimulator: Configuration file change detected: target.tmp (event: 8)
+02-23 01:39:55.684  1809  2619 I chatty  : uid=0(root) FileObserver identical 3 lines
+02-23 01:39:55.713  1809  2619 I TEESimulator: Configuration file change detected: target.tmp (event: 8)
+02-23 01:39:55.777  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pm8005_tz
+02-23 01:39:55.781  1228  1247 I chatty  : uid=0(root) thermal@2.0-ser identical 1 line
+02-23 01:39:55.783  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pm8005_tz
+02-23 01:39:55.787  1809  2619 I TEESimulator: Configuration file change detected: target.tmp (event: 8)
+02-23 01:39:55.788  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pa1-therml-adc
+02-23 01:39:55.790  1471  3650 I BatteryStatsService: In wakeup_callback: suspend aborted
+02-23 01:39:55.824  1809  2619 I TEESimulator: Configuration file change detected: target.tmp (event: 8)
+02-23 01:39:55.870  1809  2619 I TEESimulator: Configuration file change detected: target.tmp (event: 8)
+02-23 01:39:55.875  9537  9537 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+02-23 01:39:55.878  9537  9537 E libc    : Access denied finding property "persist.device_config.runtime_native_boot.profilebootclasspath"
+02-23 01:39:55.878  9537  9537 E libc    : Access denied finding property "persist.device_config.runtime_native_boot.enable_apex_image"
+02-23 01:39:55.878  9537  9537 I AndroidRuntime: Using default boot image
+02-23 01:39:55.878  9537  9537 E libc    : Access denied finding property "persist.device_config.runtime_native_boot.disable_lock_profiling"
+02-23 01:39:55.878  9537  9537 I AndroidRuntime: Leaving lock profiling enabled
+02-23 01:39:55.878  9537  9537 E libc    : Access denied finding property "persist.device_config.runtime_native_boot.enable_generational_cc"
+02-23 01:39:55.878  9537  9537 D AndroidRuntime: lockProfThreshold : false debug_oneplus : false
+02-23 01:39:55.863  9537  9537 W app_process: type=1400 audit(0.0:653): avc: denied { read } for name="u:object_r:device_config_runtime_native_boot_prop:s0" dev="tmpfs" ino=22587 scontext=u:r:shell:s0 tcontext=u:object_r:device_config_runtime_native_boot_prop:s0 tclass=file permissive=0
+02-23 01:39:55.863  9537  9537 I chatty  : uid=2000(shell) app_process identical 2 lines
+02-23 01:39:55.863  9537  9537 W app_process: type=1400 audit(0.0:656): avc: denied { read } for name="u:object_r:device_config_runtime_native_boot_prop:s0" dev="tmpfs" ino=22587 scontext=u:r:shell:s0 tcontext=u:object_r:device_config_runtime_native_boot_prop:s0 tclass=file permissive=0
+02-23 01:39:55.933  1809  2619 I TEESimulator: Configuration file change detected: target.tmp (event: 8)
+02-23 01:39:55.970  1809  2619 I TEESimulator: Configuration file change detected: target.tmp (event: 8)
+02-23 01:39:55.971  9537  9537 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
+02-23 01:39:55.971  9537  9537 D app_process: I18n APEX ICU file found: /apex/com.android.i18n/etc/icu/icudt66l.dat
+02-23 01:39:55.984  9537  9537 I app_process: The ClassLoaderContext is a special shared library.
+02-23 01:39:55.991  9537  9537 E dynamic_feature: parse the feature file now
+02-23 01:39:55.991  9537  9537 E dynamic_feature: parse the json file from /system/etc/odm_feature_list
+02-23 01:39:55.991  9537  9537 E dynamic_feature: parse the json file from /odm/etc/odm_feature_list
+02-23 01:39:56.005  9537  9537 W app_process: JNI RegisterNativeMethods: attempt to register 0 native methods for android.media.AudioAttributes
+--------- beginning of system
+02-23 01:39:56.015  9537  9537 I OPFont  : FEATURE_DYNAMIC_FONT V2 ? true
+02-23 01:39:56.901  9537  9537 D AndroidRuntime: Calling main entry com.android.commands.monkey.Monkey
+02-23 01:39:56.901  1809  2619 I TEESimulator: Configuration file change detected: target.tmp (event: 8)
+02-23 01:39:56.901  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pm8005_tz
+02-23 01:39:56.902  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pm8005_tz
+02-23 01:39:56.902  9537  9537 W Monkey  : args: [-p, com.nsdl.nsdljfe, -c, android.intent.category.LAUNCHER, 1]
+02-23 01:39:56.903  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pm8005_tz
+02-23 01:39:56.903  9537  9537 W Monkey  :  arg: "-p"
+02-23 01:39:56.903  9537  9537 W Monkey  :  arg: "com.nsdl.nsdljfe"
+02-23 01:39:56.903  9537  9537 W Monkey  :  arg: "-c"
+02-23 01:39:56.903  9537  9537 W Monkey  :  arg: "android.intent.category.LAUNCHER"
+02-23 01:39:56.904  9537  9537 W Monkey  :  arg: "1"
+02-23 01:39:56.904  9537  9537 W Monkey  : data="com.nsdl.nsdljfe"
+02-23 01:39:56.904  9537  9537 W Monkey  : data="android.intent.category.LAUNCHER"
+02-23 01:39:56.904  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pa1-therml-adc
+02-23 01:39:56.905  1471  3650 I BatteryStatsService: In wakeup_callback: resumed from suspend
+02-23 01:39:56.928  1471  2562 W BroadcastQueue: Skipping deliver [background] BroadcastRecord{91bd08f u-1 android.net.conn.CONNECTIVITY_CHANGE} to ReceiverList{7fd8f1c 9537 (unknown name)/2000/u-1 remote:57c9d69}: process gone or crashing
+02-23 01:39:56.929  1809  2619 I TEESimulator: Configuration file change detected: target.tmp (event: 8)
+02-23 01:39:56.936  9537  9537 I Monkey  : ** No activities found to run, monkey aborted.
+02-23 01:39:56.937  9537  9537 I app_process: System.exit called, status: -4
+02-23 01:39:56.937  9537  9537 I AndroidRuntime: VM exiting with result code -4.
+02-23 01:39:56.953  1809  2619 I TEESimulator: Configuration file change detected: target.tmp (event: 8)
+02-23 01:39:56.978  1809  2619 I chatty  : uid=0(root) FileObserver identical 1 line
+02-23 01:39:57.009  1809  2619 I TEESimulator: Configuration file change detected: target.tmp (event: 8)
+02-23 01:39:57.078  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pm8005_tz
+02-23 01:39:57.079  1228  1247 I chatty  : uid=0(root) thermal@2.0-ser identical 1 line
+02-23 01:39:57.080  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pm8005_tz
+02-23 01:39:57.082  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pa1-therml-adc
+02-23 01:39:57.082  1471  3650 I BatteryStatsService: In wakeup_callback: suspend aborted
+02-23 01:39:57.092  1809  2619 I TEESimulator: Configuration file change detected: target.tmp (event: 8)
+02-23 01:39:57.264  1809  2619 I chatty  : uid=0(root) FileObserver identical 4 lines
+02-23 01:39:57.298  1809  2619 I TEESimulator: Configuration file change detected: target.tmp (event: 8)
+02-23 01:39:58.255  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pm8005_tz
+02-23 01:39:58.256  1228  1247 I chatty  : uid=0(root) thermal@2.0-ser identical 1 line
+02-23 01:39:58.257  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pm8005_tz
+02-23 01:39:58.258 27885 27994 D NtpTrustedTime: forceRefreshInternal() - No network connected
+02-23 01:39:58.268  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pa1-therml-adc
+02-23 01:39:58.269  1471  3650 I BatteryStatsService: In wakeup_callback: resumed from suspend
+02-23 01:39:58.285  1809  2619 I TEESimulator: Configuration file change detected: target.tmp (event: 8)
+02-23 01:39:58.297 19703  9450 W adbd    : timed out while waiting for FUNCTIONFS_BIND, trying again
+02-23 01:39:58.297 19703  9450 I adbd    : UsbFfs: connection terminated: monitor thread finished
+02-23 01:39:58.297 19703 19703 I adbd    : UsbFfs: already offline
+02-23 01:39:58.297 19703 19703 I adbd    : destroying transport UsbFfs
+02-23 01:39:58.297 19703 19703 I adbd    : UsbFfsConnection being destroyed
+02-23 01:39:58.321  1809  2619 I TEESimulator: Configuration file change detected: target.tmp (event: 8)
+02-23 01:39:58.381  1809  2619 I TEESimulator: Configuration file change detected: target.tmp (event: 8)
+02-23 01:39:59.388 19703 19707 I adbd    : opening control endpoint /dev/usb-ffs/adb/ep0
+02-23 01:39:59.391  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pm8005_tz
+02-23 01:39:59.391 19703 19707 I adbd    : UsbFfsConnection constructed
+02-23 01:39:59.391  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pm8005_tz
+02-23 01:39:59.392  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pm8005_tz
+02-23 01:39:59.393 19703  9764 I adbd    : UsbFfs-monitor thread spawned
+02-23 01:39:59.394  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pa1-therml-adc
+02-23 01:39:59.394  1471  3650 I BatteryStatsService: In wakeup_callback: resumed from suspend
+02-23 01:39:59.415  1809  2619 I TEESimulator: Configuration file change detected: target.tmp (event: 8)
+02-23 01:39:59.452  1809  2619 I chatty  : uid=0(root) FileObserver identical 1 line
+02-23 01:39:59.494  1809  2619 I TEESimulator: Configuration file change detected: target.tmp (event: 8)
+02-23 01:40:00.699  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pm8005_tz
+02-23 01:40:00.699  1228  1247 I chatty  : uid=0(root) thermal@2.0-ser identical 1 line
+02-23 01:40:00.700  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pm8005_tz
+02-23 01:40:00.715  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pa1-therml-adc
+02-23 01:40:00.716  1471  3650 I BatteryStatsService: In wakeup_callback: resumed from suspend
+02-23 01:40:00.721  1809  2619 I TEESimulator: Configuration file change detected: target.tmp (event: 8)
+02-23 01:40:00.774  1809  2619 I chatty  : uid=0(root) FileObserver identical 2 lines
+02-23 01:40:00.804  1809  2619 I TEESimulator: Configuration file change detected: target.tmp (event: 8)
+02-23 01:40:02.045  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pm8005_tz
+02-23 01:40:02.048  1228  1247 I chatty  : uid=0(root) thermal@2.0-ser identical 1 line
+02-23 01:40:02.049  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pm8005_tz
+02-23 01:40:02.052  1228  1247 I android.hardware.thermal@2.0-service.qti: uevent triggered for sensor: pa1-therml-adc
+02-23 01:40:02.053  1471  3650 I BatteryStatsService: In wakeup_callback: resumed from suspend
+02-23 01:40:02.054  1809  2619 I TEESimulator: Configuration file change detected: target.tmp (event: 8)
