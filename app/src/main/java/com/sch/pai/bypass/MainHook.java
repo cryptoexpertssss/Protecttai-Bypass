@@ -36,6 +36,7 @@ public class MainHook implements IXposedHookLoadPackage {
             // We run the scanner as early as possible in handleLoadPackage
             // using the appInfo sourceDir instead of waiting for Application.onCreate
             if (lpparam.appInfo != null) {
+                // RUN FOR ALL PACKAGES - No more TARGET_PACKAGES check
                 runUniversalScanner(lpparam.packageName, lpparam.appInfo.sourceDir, lpparam.classLoader);
             }
         } catch (Throwable t) {
@@ -552,23 +553,7 @@ public class MainHook implements IXposedHookLoadPackage {
         }
     }
 
-    private static final String[] TARGET_PACKAGES = {
-        "com.csam.icici", "com.suryoday", "com.hdfc", "com.yesbank", 
-        "com.nsdlpb", "com.msf.kbank", "com.idfc", "com.axismobile", 
-        "in.org.npci", "com.icicibank", "com.hdfcfund.investor", "com.hdfc.mf"
-    };
-
     private void runUniversalScanner(String packageName, String sourceDir, ClassLoader classLoader) {
-        boolean isTarget = false;
-        for (String target : TARGET_PACKAGES) {
-            if (packageName.contains(target)) {
-                isTarget = true;
-                break;
-            }
-        }
-
-        if (!isTarget) return;
-
         XposedBridge.log("ShekharPAIBypass: Starting Universal Heuristic Scan for " + packageName);
 
         try {
