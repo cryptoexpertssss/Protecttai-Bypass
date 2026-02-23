@@ -149,48 +149,51 @@ public class MainHook implements IXposedHookLoadPackage {
                 }
             });
 
-            // 7. ADB Detection Bypass
+            // 7. Consolidated Setting & ADB Redirection
             try {
-                XC_MethodHook adbHook = new XC_MethodHook() {
+                XC_MethodHook settingsHook = new XC_MethodHook() {
                     @Override
                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                         String name = (String) param.args[1];
-                        if ("adb_enabled".equals(name) || "usb_debugging_enabled".equals(name) || "development_settings_enabled".equals(name)) {
-                            XposedBridge.log("ShekharPAIBypass: [ADB] Spoofing setting " + name + " to 0");
+                        if (name == null) return;
+                        if (name.equals("adb_enabled") || name.equals("usb_debugging_enabled") || 
+                            name.equals("development_settings_enabled") || name.equals("accessibility_enabled")) {
+                            XposedBridge.log("ShekharPAIBypass: [UNIVERSAL] Spoofing setting " + name + " -> 0");
                             param.setResult(0);
                         }
                     }
                 };
                 
-                String[] settingsClasses = {"android.provider.Settings.Global", "android.provider.Settings.Secure"};
+                String[] settingsClasses = {"android.provider.Settings.Global", "android.provider.Settings.Secure", "android.provider.Settings.System"};
                 for (String cls : settingsClasses) {
                     try {
-                        XposedHelpers.findAndHookMethod(cls, lpparam.classLoader, "getInt", android.content.ContentResolver.class, String.class, adbHook);
-                        XposedHelpers.findAndHookMethod(cls, lpparam.classLoader, "getInt", android.content.ContentResolver.class, String.class, int.class, adbHook);
+                        XposedHelpers.findAndHookMethod(cls, lpparam.classLoader, "getInt", android.content.ContentResolver.class, String.class, settingsHook);
+                        XposedHelpers.findAndHookMethod(cls, lpparam.classLoader, "getInt", android.content.ContentResolver.class, String.class, int.class, settingsHook);
+                        XposedHelpers.findAndHookMethod(cls, lpparam.classLoader, "getString", android.content.ContentResolver.class, String.class, new XC_MethodHook() {
+                            @Override
+                            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                                String name = (String) param.args[1];
+                                if ("adb_enabled".equals(name)) param.setResult("0");
+                            }
+                        });
                     } catch (Throwable ignore) {}
                 }
 
                 // Hook SystemProperties for adb configs
-                Class<?> sysPropClass = XposedHelpers.findClass("android.os.SystemProperties", lpparam.classLoader);
-                XposedHelpers.findAndHookMethod(sysPropClass, "get", String.class, new XC_MethodHook() {
+                XposedHelpers.findAndHookMethod("android.os.SystemProperties", lpparam.classLoader, "get", String.class, new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         String key = (String) param.args[0];
-                        if (key != null && (key.equals("persist.sys.usb.config") || key.equals("sys.usb.config") || key.equals("ro.debuggable"))) {
+                        if (key != null && (key.contains("adb") || key.contains("debug") || key.contains("secure"))) {
                             String val = (String) param.getResult();
-                            if (val != null && val.contains("adb")) {
-                                XposedBridge.log("ShekharPAIBypass: [ADB] Scrubbing 'adb' from " + key);
-                                param.setResult(val.replace("adb", "").replace(",,", ","));
-                            } else if (key.equals("ro.debuggable")) {
-                                param.setResult("0");
-                            }
+                            if (key.equals("ro.debuggable")) param.setResult("0");
+                            else if (key.equals("ro.secure")) param.setResult("1");
+                            else if (val != null && val.contains("adb")) param.setResult(val.replace("adb", ""));
                         }
                     }
                 });
-
-                XposedBridge.log("ShekharPAIBypass: [ADB] ADB bypass hooks deployed");
             } catch (Throwable t) {
-                XposedBridge.log("ShekharPAIBypass: [ADB] ADB bypass failed: " + t.getMessage());
+                XposedBridge.log("ShekharPAIBypass: [UNIVERSAL] Settings redirection failed: " + t.getMessage());
             }
 
             // 8. Universal SSL Certificate Unpinning
@@ -454,20 +457,63 @@ public class MainHook implements IXposedHookLoadPackage {
                     }
                 });
 
-                // Scrub /proc/self/maps to hide memory traces
-                XposedHelpers.findAndHookMethod("java.io.BufferedReader", lpparam.classLoader, "readLine", new XC_MethodHook() {
+                // Scrub /proc/self/maps and mounts to hide memory/mount traces
+                XC_MethodHook procScrubHook = new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         String line = (String) param.getResult();
                         if (line != null) {
                             String lower = line.toLowerCase();
-                            if (lower.contains("xposed") || lower.contains("frida") || lower.contains("lsposed") || lower.contains("magisk")) {
-                                // XposedBridge.log("ShekharPAIBypass: [STEALTH] Scrubbed line from maps: " + line);
-                                param.setResult(null); // Return null for such lines
+                            if (lower.contains("xposed") || lower.contains("frida") || lower.contains("lsposed") || lower.contains("magisk") || lower.contains("zygisk")) {
+                                param.setResult(null);
+                            }
+                        }
+                    }
+                };
+                XposedHelpers.findAndHookMethod("java.io.BufferedReader", lpparam.classLoader, "readLine", procScrubHook);
+
+                // Hide bypass from RunningAppProcesses
+                XposedHelpers.findAndHookMethod("android.app.ActivityManager", lpparam.classLoader, "getRunningAppProcesses", new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        java.util.List<android.app.ActivityManager.RunningAppProcessInfo> processes = (java.util.List) param.getResult();
+                        if (processes != null) {
+                            java.util.Iterator it = processes.iterator();
+                            while (it.hasNext()) {
+                                android.app.ActivityManager.RunningAppProcessInfo info = (android.app.ActivityManager.RunningAppProcessInfo) it.next();
+                                if (info.processName.contains("sch.pai.bypass") || info.processName.contains("frida") || info.processName.contains("lsposed")) {
+                                    it.remove();
+                                }
                             }
                         }
                     }
                 });
+
+                // Hide bypass process from permissions
+                XposedHelpers.findAndHookMethod("android.app.ContextImpl", lpparam.classLoader, "checkPermission", String.class, int.class, int.class, new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        String permission = (String) param.args[0];
+                        if (permission != null && (permission.contains("INSTALL_PACKAGES") || permission.contains("DELETE_PACKAGES"))) {
+                            // Some apps check if we have installer permissions to detect side-loading
+                        }
+                    }
+                });
+                
+                String[] pmClasses = {"android.app.ApplicationPackageManager", "android.content.pm.PackageManager"};
+                for (String cls : pmClasses) {
+                    try {
+                        XposedHelpers.findAndHookMethod(cls, lpparam.classLoader, "checkPermission", String.class, String.class, new XC_MethodHook() {
+                            @Override
+                            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                                String pkg = (String) param.args[1];
+                                if (blacklist.contains(pkg)) {
+                                    param.setResult(android.content.pm.PackageManager.PERMISSION_DENIED);
+                                }
+                            }
+                        });
+                    } catch (Throwable ignore) {}
+                }
 
                 XposedBridge.log("ShekharPAIBypass: [STEALTH] Advanced stealth features deployed");
             } catch (Throwable t) {
@@ -522,7 +568,8 @@ public class MainHook implements IXposedHookLoadPackage {
         // Package-based scoring
         if (name.contains("protectt") || name.contains("nsdl") || name.contains("guard") || 
             name.contains("security") || name.contains("rasp") || name.contains("interactor") ||
-            name.contains("integrity") || name.contains("safety") || name.contains("tamper")) {
+            name.contains("integrity") || name.contains("safety") || name.contains("tamper") ||
+            name.contains("trust") || name.contains("verify") || name.contains("shield")) {
             score += 20;
         }
 
@@ -549,7 +596,9 @@ public class MainHook implements IXposedHookLoadPackage {
             name.contains("proxy") || name.contains("developer") || name.contains("adb") || 
             name.contains("magisk") || name.contains("zygisk") || name.contains("jailbreak") ||
             name.contains("integrity") || name.contains("safety") || name.contains("tamper") ||
-            name.contains("debug") || name.contains("virtual") || name.contains("sandbox")) {
+            name.contains("debug") || name.contains("virtual") || name.contains("sandbox") ||
+            name.contains("overlay") || name.contains("accessibility") || name.contains("automation") ||
+            name.contains("mock") || name.contains("gps") || name.contains("vpn")) {
             score += 15;
         }
 
