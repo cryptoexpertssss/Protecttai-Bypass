@@ -27,6 +27,7 @@ public class MainHook implements IXposedHookLoadPackage {
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
         // Run defensive hooks immediately to hide LSPosed
+        XposedBridge.log("ShekharPAIBypass: [DEBUG] handleLoadPackage started for " + lpparam.packageName);
         runDefensiveHooks(lpparam);
 
         XposedBridge.log("ShekharPAIBypass: Loaded for " + lpparam.packageName);
@@ -149,6 +150,28 @@ public class MainHook implements IXposedHookLoadPackage {
                 }
             });
 
+            // 7. Prevent Runtime.exec() and ProcessBuilder for root strings
+            XC_MethodHook shellHook = new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    Object cmd = param.args[0];
+                    String cmdStr = "";
+                    if (cmd instanceof String) cmdStr = (String) cmd;
+                    else if (cmd instanceof String[]) cmdStr = java.util.Arrays.toString((String[]) cmd);
+
+                    if (cmdStr.toLowerCase().contains("su") || cmdStr.toLowerCase().contains("which") || 
+                        cmdStr.toLowerCase().contains("magisk") || cmdStr.toLowerCase().contains("busybox")) {
+                        XposedBridge.log("ShekharPAIBypass: [DEFENCE] Blocked shell command: " + cmdStr);
+                        param.setThrowable(new java.io.IOException("Service not found"));
+                    }
+                }
+            };
+            XposedHelpers.findAndHookMethod(Runtime.class, "exec", String.class, shellHook);
+            XposedHelpers.findAndHookMethod(Runtime.class, "exec", String[].class, shellHook);
+            XposedHelpers.findAndHookMethod(Runtime.class, "exec", String.class, String[].class, shellHook);
+            XposedHelpers.findAndHookMethod(Runtime.class, "exec", String[].class, String[].class, shellHook);
+            XposedHelpers.findAndHookMethod(ProcessBuilder.class, "start", shellHook);
+
             // 7. Consolidated Setting & ADB Redirection
             try {
                 XC_MethodHook settingsHook = new XC_MethodHook() {
@@ -184,10 +207,12 @@ public class MainHook implements IXposedHookLoadPackage {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         String key = (String) param.args[0];
-                        if (key != null && (key.contains("adb") || key.contains("debug") || key.contains("secure"))) {
+                        if (key != null && (key.contains("adb") || key.contains("debug") || key.contains("secure") || key.contains("tags") || key.contains("build"))) {
                             String val = (String) param.getResult();
                             if (key.equals("ro.debuggable")) param.setResult("0");
                             else if (key.equals("ro.secure")) param.setResult("1");
+                            else if (key.equals("ro.build.tags")) param.setResult("release-keys");
+                            else if (key.equals("ro.build.type")) param.setResult("user");
                             else if (val != null && val.contains("adb")) param.setResult(val.replace("adb", ""));
                         }
                     }
@@ -527,11 +552,10 @@ public class MainHook implements IXposedHookLoadPackage {
         }
     }
 
-
-        private static final String[] TARGET_PACKAGES = {
+    private static final String[] TARGET_PACKAGES = {
         "com.csam.icici", "com.suryoday", "com.hdfc", "com.yesbank", 
         "com.nsdlpb", "com.msf.kbank", "com.idfc", "com.axismobile", 
-        "in.org.npci", "com.icicibank"
+        "in.org.npci", "com.icicibank", "com.hdfcfund.investor", "com.hdfc.mf"
     };
 
     private void runUniversalScanner(String packageName, String sourceDir, ClassLoader classLoader) {
