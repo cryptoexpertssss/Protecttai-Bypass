@@ -595,9 +595,7 @@ public class MainHook implements IXposedHookLoadPackage {
                         param.setResult(0); // Often 0 = success in RASP codes
                     }
                     
-                    if (param.hasResult()) {
-                        // XposedBridge.log("ShekharPAIBypass: [NEUTRALIZED] " + m.getDeclaringClass().getName() + "." + m.getName());
-                    }
+                    // Internal result used for short-circuiting
                 }
             });
         } catch (Throwable t) {
