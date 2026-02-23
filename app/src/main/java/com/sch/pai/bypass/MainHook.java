@@ -398,8 +398,11 @@ public class MainHook implements IXposedHookLoadPackage {
             try {
                 final java.util.Set<String> blacklist = new java.util.HashSet<>(java.util.Arrays.asList(
                     "com.sch.pai.bypass", "io.github.lsposed.manager", "org.meowcat.lsposed",
-                    "com.topjohnwu.magisk", "com.google.android.apps.authenticator2", // sometimes used for root hide
-                    "com.frida.server", "re.frida.server", "iamnotadeveloper", "com.dia", "dia"
+                    "com.topjohnwu.magisk", "com.google.android.apps.authenticator2",
+                    "com.frida.server", "re.frida.server", "bin.mt.plus", "dialog.box",
+                    "com.studio.duckdetector", "org.frknkrc44.hma_oss", "top.ltfan.notdeveloper",
+                    "com.network.proxy", "com.resukisu.resukisu", "com.smartpack.packagemanager",
+                    "tech.httptoolkit.pinning_demo", "com.jrummyapps.rootchecker"
                 ));
 
                 XC_MethodHook hidePackageHook = new XC_MethodHook() {
