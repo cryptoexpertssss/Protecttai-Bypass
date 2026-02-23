@@ -17,13 +17,12 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class MainHook implements IXposedHookLoadPackage {
     
-    // The "Digital Fingerprint" of Protectt.ai RASP SDK initialization
-    private static final Class<?>[][] RASP_SIGNATURES = {
-        // Standard: (String, int, int, int, String, int)
+    // The "Digital Fingerprint" of RASP SDK initialization patterns
+    private static final Class<?>[][] RASP_INIT_SIGNATURES = {
         {String.class, int.class, int.class, int.class, String.class, int.class},
-        // Variant: (Context, String, int, int, int, String, int)
         {Context.class, String.class, int.class, int.class, int.class, String.class, int.class}
     };
+
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
@@ -478,11 +477,11 @@ public class MainHook implements IXposedHookLoadPackage {
         }
     }
 
+
     private void runUniversalScanner(Context context) {
         try {
             ApplicationInfo ai = context.getApplicationInfo();
-            String dexPath = ai.sourceDir;
-            DexFile dexFile = new DexFile(dexPath);
+            DexFile dexFile = new DexFile(ai.sourceDir);
             Enumeration<String> entries = dexFile.entries();
             ClassLoader classLoader = context.getClassLoader();
 
@@ -490,8 +489,7 @@ public class MainHook implements IXposedHookLoadPackage {
             while (entries.hasMoreElements()) {
                 String className = entries.nextElement();
                 
-                // Heuristic: RASP SDKs often have short obfuscated names or contain "protectt"
-                // We skip android/androidx/google libs to save time, but check others.
+                // Skip system/heavy libs
                 if (className.startsWith("android.") || className.startsWith("androidx.") || 
                     className.startsWith("com.google.") || className.startsWith("java.") || 
                     className.startsWith("kotlin.")) continue;
@@ -499,63 +497,112 @@ public class MainHook implements IXposedHookLoadPackage {
                 Class<?> clazz = XposedHelpers.findClassIfExists(className, classLoader);
                 if (clazz == null) continue;
 
+                int classScore = calculateClassScore(clazz);
+                if (classScore < 10) continue;
+
                 for (Method m : clazz.getDeclaredMethods()) {
-                    if (isRaspSignature(m)) {
-                        XposedBridge.hookMethod(m, getCallback());
-                        XposedBridge.log("ShekharPAIBypass: [UNIVERSAL MATCH] Hooked " + m.getDeclaringClass().getName() + "." + m.getName());
+                    int methodScore = calculateMethodScore(m, classScore);
+                    if (methodScore >= 20) {
+                        hookSecurityMethod(m);
                         matchesFound++;
                     }
                 }
             }
-            XposedBridge.log("ShekharPAIBypass: Heuristic scan complete. Found " + matchesFound + " targets.");
+            XposedBridge.log("ShekharPAIBypass: Signatureless scan complete. Neutralized " + matchesFound + " targets.");
         } catch (Throwable t) {
-            XposedBridge.log("ShekharPAIBypass: Universal Scanner failed: " + t.getMessage());
+            XposedBridge.log("ShekharPAIBypass: Scanner failed: " + t.getMessage());
         }
     }
 
-    private boolean isRaspSignature(Method m) {
-        String methodName = m.getName().toLowerCase();
-        String className = m.getDeclaringClass().getName().toLowerCase();
+    private int calculateClassScore(Class<?> clazz) {
+        String name = clazz.getName().toLowerCase();
+        int score = 0;
         
-        // 1. Hook anything in Protectt.ai packages blindly
-        if (className.contains("protectt") || className.contains("nsdl") || className.contains("AppProtecttInteractor")) {
-            if (methodName.contains("init") || methodName.contains("start") || methodName.contains("check") || methodName.contains("detect") || methodName.contains("root") || methodName.contains("hook") || methodName.contains("xposed")) {
-                return true;
-            }
+        // Package-based scoring
+        if (name.contains("protectt") || name.contains("nsdl") || name.contains("guard") || 
+            name.contains("security") || name.contains("rasp") || name.contains("interactor")) {
+            score += 20;
         }
 
+        // Structural scoring (e.g., obfuscated classes with many booleans)
+        if (clazz.getSimpleName().length() <= 2) {
+            int boolMethods = 0;
+            for (Method m : clazz.getDeclaredMethods()) {
+                if (m.getReturnType().equals(boolean.class)) boolMethods++;
+            }
+            if (boolMethods > 5) score += 15;
+        }
+
+        return score;
+    }
+
+    private int calculateMethodScore(Method m, int classScore) {
+        String name = m.getName().toLowerCase();
+        int score = classScore;
         Class<?>[] params = m.getParameterTypes();
-        
-        // 2. Check against our known high-entropy RASP signatures
-        for (Class<?>[] sig : RASP_SIGNATURES) {
+
+        // 1. Semantic Match
+        if (name.contains("rooted") || name.contains("hook") || name.contains("xposed") || 
+            name.contains("detect") || name.contains("check") || name.contains("emulator") || 
+            name.contains("proxy") || name.contains("developer") || name.contains("adb")) {
+            score += 15;
+        }
+
+        // 2. Init/Starter Match
+        for (Class<?>[] sig : RASP_INIT_SIGNATURES) {
             if (params.length == sig.length) {
                 boolean match = true;
                 for (int i = 0; i < params.length; i++) {
-                    if (!params[i].equals(sig[i])) {
-                        match = false;
-                        break;
+                    if (!params[i].equals(sig[i])) { match = false; break; }
+                }
+                if (match) score += 20;
+            }
+        }
+
+        // 3. Generic Check Match (boolean, 0 params)
+        if (m.getReturnType().equals(boolean.class) && params.length == 0) {
+            score += 5;
+        }
+
+        return score;
+    }
+
+    private void hookSecurityMethod(final Method m) {
+        try {
+            XposedBridge.hookMethod(m, new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    String name = m.getName().toLowerCase();
+                    Class<?> retType = m.getReturnType();
+
+                    // Semantic Return Forgery
+                    if (retType.equals(boolean.class)) {
+                        // If it sounds like a threat check, return false (not found)
+                        if (name.contains("root") || name.contains("hook") || name.contains("xposed") || 
+                            name.contains("detect") || name.contains("check") || name.contains("emulator") || 
+                            name.contains("proxy") || name.contains("adb") || name.contains("dev")) {
+                            param.setResult(false);
+                        } 
+                        // If it sounds like a safety/init check, return true (is safe)
+                        else if (name.contains("safe") || name.contains("valid") || name.contains("success") || name.contains("authorized")) {
+                            param.setResult(true);
+                        } else {
+                            param.setResult(false); // Default to safe/not-found
+                        }
+                    } else if (retType.equals(void.class) || !retType.isPrimitive()) {
+                        param.setResult(null); // Force success/ignore for inits/voids
+                    } else if (retType.equals(int.class)) {
+                        param.setResult(0); // Often 0 = success in RASP codes
+                    }
+                    
+                    if (param.hasResult()) {
+                        // XposedBridge.log("ShekharPAIBypass: [NEUTRALIZED] " + m.getDeclaringClass().getName() + "." + m.getName());
                     }
                 }
-                if (match) return true;
-            }
+            });
+        } catch (Throwable t) {
+            // Ignore hook errors
         }
-
-        // 3. Generic Heuristic: If method takes 3+ params and mostly ints/Strings
-        if (params.length >= 3 && params.length <= 15) {
-            int intCount = 0;
-            int stringCount = 0;
-            int contextCount = 0;
-            for (Class<?> p : params) {
-                if (p.equals(int.class)) intCount++;
-                else if (p.equals(String.class)) stringCount++;
-                else if (p.equals(Context.class) || p.equals(Application.class)) contextCount++;
-            }
-            // Protectt.ai init usually has ints and strings, often a context
-            if (intCount >= 2 && stringCount >= 1) return true;
-            if (contextCount >= 1 && stringCount >= 2) return true;
-        }
-
-        return false;
     }
 
     private XC_MethodHook getCallback() {
