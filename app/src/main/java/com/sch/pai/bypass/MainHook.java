@@ -638,7 +638,11 @@ public class MainHook implements IXposedHookLoadPackage {
                 for (int i = 0; i < params.length; i++) {
                     if (!params[i].equals(sig[i])) { match = false; break; }
                 }
-                if (match) score += 20;
+                if (match) {
+                    if (m.getReturnType() == void.class || m.getReturnType() == boolean.class) {
+                        score += 20;
+                    }
+                }
             }
         }
 
@@ -672,10 +676,17 @@ public class MainHook implements IXposedHookLoadPackage {
                         } else {
                             param.setResult(false); // Default to safe/not-found
                         }
-                    } else if (retType.equals(void.class) || !retType.isPrimitive()) {
+                    } else if (retType.equals(void.class)) {
                         param.setResult(null); // Force success/ignore for inits/voids
                     } else if (retType.equals(int.class)) {
                         param.setResult(0); // Often 0 = success in RASP codes
+                    } else {
+                        // For non-primitives (String, Object, array), DO NOT return null unless we have very high confidence it's a threat list!
+                        if (name.contains("detect") || name.contains("threat") || name.contains("risk")) {
+                            if (retType.equals(String.class)) param.setResult("");
+                            else param.setResult(null);
+                        }
+                        // Default: We let the original method execute! Breaking Crypto or SharedPreferences is much worse.
                     }
                     
                     // Internal result used for short-circuiting
