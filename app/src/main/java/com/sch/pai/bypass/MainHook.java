@@ -151,6 +151,68 @@ public class MainHook implements IXposedHookLoadPackage {
                 }
             });
 
+            // 6.5. Prevent File.exists() for Root binaries and apps
+            XposedHelpers.findAndHookMethod(java.io.File.class, "exists", new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    java.io.File file = (java.io.File) param.thisObject;
+                    String path = file.getAbsolutePath();
+                    if (path != null) {
+                        String lower = path.toLowerCase();
+                        if (lower.contains("su") || lower.contains("magisk") || lower.contains("xposed") ||
+                            lower.contains("edxposed") || lower.contains("lsposed") || lower.contains("riru") ||
+                            lower.contains("zygisk") || lower.contains("busybox") || lower.contains("supersu")) {
+                            
+                            // Check exact matches or common paths
+                            if (lower.equals("/system/app/superuser.apk") || lower.equals("/sbin/su") ||
+                                lower.equals("/system/bin/su") || lower.equals("/system/xbin/su") ||
+                                lower.equals("/data/local/xbin/su") || lower.equals("/data/local/bin/su") ||
+                                lower.equals("/system/sd/xbin/su") || lower.equals("/system/bin/failsafe/su") ||
+                                lower.equals("/data/local/su") || lower.equals("/su/bin/su") ||
+                                lower.contains("magisk") || lower.contains("lsposed") || lower.contains("zygisk")) {
+                                
+                                XposedBridge.log("ShekharPAIBypass: [DEFENCE] Blocked Root File check: " + path);
+                                param.setResult(false);
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 6.6. Hide from getInstalledPackages and getInstalledApplications
+            XC_MethodHook packageListHook = new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    java.util.List<?> list = (java.util.List<?>) param.getResult();
+                    if (list != null) {
+                        java.util.List<Object> cleanList = new java.util.ArrayList<>();
+                        boolean modified = false;
+                        for (Object info : list) {
+                            String pkgName = null;
+                            if (info instanceof android.content.pm.PackageInfo) {
+                                pkgName = ((android.content.pm.PackageInfo) info).packageName;
+                            } else if (info instanceof android.content.pm.ApplicationInfo) {
+                                pkgName = ((android.content.pm.ApplicationInfo) info).packageName;
+                            }
+                            
+                            if (pkgName != null && (pkgName.contains("magisk") || pkgName.contains("xposed") || 
+                                pkgName.contains("edxposed") || pkgName.contains("lsposed") || 
+                                pkgName.contains("riru") || pkgName.contains("zygisk"))) {
+                                modified = true;
+                                XposedBridge.log("ShekharPAIBypass: [DEFENCE] Hid root package from bulk list: " + pkgName);
+                            } else {
+                                cleanList.add(info);
+                            }
+                        }
+                        if (modified) {
+                            param.setResult(cleanList);
+                        }
+                    }
+                }
+            };
+            XposedHelpers.findAndHookMethod("android.app.ApplicationPackageManager", lpparam.classLoader, "getInstalledPackages", int.class, packageListHook);
+            XposedHelpers.findAndHookMethod("android.app.ApplicationPackageManager", lpparam.classLoader, "getInstalledApplications", int.class, packageListHook);
+
             // 7. Prevent Runtime.exec() and ProcessBuilder for root strings
             XC_MethodHook shellHook = new XC_MethodHook() {
                 @Override
