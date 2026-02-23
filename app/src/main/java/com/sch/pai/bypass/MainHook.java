@@ -359,8 +359,7 @@ public class MainHook implements IXposedHookLoadPackage {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         XposedBridge.log("ShekharPAIBypass: [DEFENCE] Enforced NoProxy in ProxySelector.getDefault()");
-                        param.setResult(java.net.ProxySelector.getDefault()); // Return system default or NoProxy?
-                        // Actually, returning a custom one that always returns NO_PROXY is better
+                        // Return a custom one that always returns NO_PROXY
                         param.setResult(new java.net.ProxySelector() {
                             @Override
                             public java.util.List<java.net.Proxy> select(java.net.URI uri) {
